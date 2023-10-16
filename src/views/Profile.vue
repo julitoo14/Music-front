@@ -176,7 +176,6 @@ onMounted(async () => {
       const blob = new Blob([res.data], { type: res.headers["content-type"] });
       const imageUrl = URL.createObjectURL(blob);
       avatarUrl.value = imageUrl;
-      console.log(res.data);
     });
 });
 </script>

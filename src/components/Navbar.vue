@@ -20,7 +20,7 @@
                 </RouterLink>
             </li>
             <li>
-                <RouterLink class="link d-inline-flex nav-link link-light p-1 align-items-center" to="/">
+                <RouterLink class="link d-inline-flex nav-link link-light p-1 align-items-center" to="/artists">
                     <ArtistIcon/> 
                     <p class="m-1">Artists</p>                 
                 </RouterLink>
