@@ -1,24 +1,28 @@
 <template>
-    <div class="container">
+    <div class="container p-3">
         <div class="row">
-            <div v-for="artist in state.artists" :key="artist._id" class="col-md-4">
-                <div class="p-2 card border-secondary bg-black mb-4 box-shadow">
-                    <img class="card-img-top" :src="artist.image" alt="Artist Image">
-                    <div class="card-body">
-                        <h5 class="text-light card-title">{{ artist.name }}</h5>
-                        <p class="card-text">{{ artist.description }}</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-light">9 mins</small>
-                        </div>
-                    </div>
-                </div>
+          <div v-for="artist in state.artists" :key="artist._id" class="col-md-4">
+            <div class="p-2 card border-secondary bg-dark mb-4 box-shadow">
+              <img class="card-img-top" :src="artist.image" alt="Artist Image">
+              <div class="card-body">
+                <h5 class="text-light card-title">{{ artist.name }}</h5>
+                <p class="card-text text-light">{{ artist.description }}</p>
+                
+              </div>
             </div>
+          </div>
         </div>
-        <nav class="pagination" role="navigation" aria-label="pagination">
-            <button class="button" :disabled="state.page === 1" @click="previousPage()">Previous</button>
-            <button class="button" :disabled="state.page === state.totalPages" @click="nextPage()">Next</button>
+        <nav class="pagination justify-content-center mt-auto" role="navigation" aria-label="pagination">
+          <ul class="pagination">
+            <li class="page-item" :class="{ disabled: state.page === 1 }">
+              <button class="page-link" @click="previousPage()">Previous</button>
+            </li>
+            <li class="page-item" :class="{ disabled: state.page === state.totalPages }">
+              <button class="page-link" @click="nextPage()">Next</button>
+            </li>
+          </ul>
         </nav>
-    </div>
+      </div>
 </template>
 
 <script>
@@ -30,7 +34,7 @@ export default {
         const state = reactive({
             artists: [],
             page: 1,
-            totalPages: 1,
+
         });
 
         const config = {
@@ -44,10 +48,11 @@ export default {
                 .get(`http://localhost:3910/api/artist/list/${state.page}`, config)
                 .then((response) => {
                     state.artists = response.data.artists;
-                    state.totalPages = response.data.totalPages;
+
 
                     // Fetch image for each artist
                     state.artists.forEach((artist) => {
+                        console.log(artist.image)
                         axios
                             .get(`http://localhost:3910/api/artist/image/${artist.image}`, {
                                 headers: {
@@ -61,15 +66,15 @@ export default {
                                 });
                                 const imageUrl = URL.createObjectURL(blob);
                                 artist.image = imageUrl;
-                                console.log(imageUrl)
                             })
                             .catch((error) => {
-                                console.log(error);
+                                console.log('hola')
+                                console.log(error.response.data.message);
                             });
                     });
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.log(error.response.data.message);
                 });
         };
 
@@ -95,3 +100,52 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.card {
+    border-radius: 10px;
+  }
+  
+  .card-img-top {
+    height: 15em;
+    object-fit: cover;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+  }
+  
+  .pagination {
+    margin-top: 20px;
+  }
+  
+  .page-link {
+    border-radius: 0;
+  }
+  
+  .page-item.disabled .page-link {
+    background-color: #343a40;
+    border-color: #343a40;
+  }
+  
+  .page-item.disabled .page-link:hover {
+    background-color: #343a40;
+    border-color: #343a40;
+  }
+  
+  .page-item.active .page-link {
+    background-color: #343a40;
+    border-color: #343a40;
+  }
+  
+  /* Custom styles */
+  .container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .mt-auto {
+    margin-top: auto;
+  }
+</style>
