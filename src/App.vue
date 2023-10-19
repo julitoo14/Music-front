@@ -2,8 +2,8 @@
 <template>
   
   <div class="view" :style="{ flexDirection: logged ? 'block' : 'flex' }">
-    <Navbar/>
-    <RouterView></RouterView>
+    <Navbar />
+    <RouterView style="overflow-y:auto; width: 100%;"></RouterView>
   </div>
 </template>
 
@@ -14,6 +14,8 @@
   height: 100vh;
   display: flex;
 }
+
+
 
 </style>
 

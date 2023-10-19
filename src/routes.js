@@ -3,8 +3,14 @@ import Register from './views/register.vue';
 import Login from './views/login.vue';
 import Home from './views/Home.vue';
 import Profile from './views/Profile.vue';
-import Create from './views/CreateArtist.vue';
+import CreateArtist from './views/CreateArtist.vue';
 import Artists from './views/Artists.vue';
+import Artist from './views/Artist.vue';
+import EditArtist from './views/EditArtist.vue';
+import Album from './views/Album/Album.vue';
+import CreateAlbum from './views/CreateAlbum.vue';
+import EditAlbum from './views/Album/EditAlbum.vue';
+import AddSong from './views/Song/AddSong.vue'
 
 const routes = [
     {
@@ -25,12 +31,37 @@ const routes = [
     },
     {
         path: '/createArtist',
-        component: Create
+        component: CreateArtist
     },
     {
         path: '/artists',
         component: Artists
+    },
+    {
+        path: '/artist/:id',
+        component: Artist
+    },
+    {
+        path: '/editArtist/:id',
+        component: EditArtist
+    },
+    {
+        path: '/album/:id',
+        component: Album
+    },
+    {
+        path: '/createAlbum/:artistId',
+        component: CreateAlbum
+    },
+    {
+        path: '/editAlbum/:id',
+        component: EditAlbum
+    },
+    {
+        path: '/addSong/:albumId',
+        component: AddSong
     }
+
 ]
 
 const router = createRouter({

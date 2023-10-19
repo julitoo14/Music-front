@@ -31,6 +31,12 @@
                     <p class="m-1">Albums</p>                 
                 </RouterLink>
             </li>
+            <li>
+                <RouterLink class="link d-inline-flex nav-link link-light p-1 align-items-center" to="/createArtist">
+                    <Add/>
+                    <p class="m-1">Add Artist</p>
+                  </RouterLink>
+            </li>
         </ul>
 
         <ul v-else class="p-3 nav nav-pills flex-column mb-auto">
@@ -89,6 +95,7 @@ import LibraryIcon from '../assets/icons/LibraryIcon.vue';
 import ArtistIcon from '../assets/icons/ArtistIcon.vue';
 import AlbumIcon from '../assets/icons/AlbumIcon.vue';
 import LoginIcon from '../assets/icons/LoginIcon.vue';
+import Add from '../assets/icons/Add.vue';
 import axios from 'axios';
 
 const avatarUrl = ref('');
@@ -144,6 +151,10 @@ watch(logged, (newVal) =>{
         background-color: rgb(100, 99, 99);
     }
 
+    .dropdown{
+        bottom: 0;
+        width: 50%;
+    }
     .nav-link:hover{
         cursor: pointer;
     }
@@ -158,6 +169,8 @@ watch(logged, (newVal) =>{
     .sidebar{
         width: 20%;
         background-color: rgb(26, 27, 27);
+        height: 100%;
+        position: relative;
     }
 
     .link p {

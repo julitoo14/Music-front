@@ -61,6 +61,7 @@ import { useRouter } from "vue-router";
 const name = ref("");
 const description = ref("");
 const image = ref("default.png");
+const router = useRouter();
 let alert = reactive({
   show: false,
   message: "",
@@ -116,6 +117,9 @@ const saveArtist = async () => {
     );
 
     showAlert("Artist saved successfully!", 'info');
+    setTimeout(() => {
+      router.push(`/artist/`);
+    }, 2000);
   } catch (error) {
     console.error(error);
     showAlert("Failed to save artist!");
