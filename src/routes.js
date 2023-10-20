@@ -10,7 +10,8 @@ import EditArtist from './views/EditArtist.vue';
 import Album from './views/Album/Album.vue';
 import CreateAlbum from './views/CreateAlbum.vue';
 import EditAlbum from './views/Album/EditAlbum.vue';
-import AddSong from './views/Song/AddSong.vue'
+import AddSong from './views/Song/AddSong.vue';
+import EditSong from './views/Song/EditSong.vue'
 
 const routes = [
     {
@@ -60,6 +61,10 @@ const routes = [
     {
         path: '/addSong/:albumId',
         component: AddSong
+    },
+    {
+        path: '/editSong/:id',
+        component: EditSong
     }
 
 ]

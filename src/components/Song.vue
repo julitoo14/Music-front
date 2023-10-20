@@ -3,13 +3,18 @@
         <div class="song flex-grow-1">
             <p class="track mb-0 col-1">{{ song.track }}</p>
             <p class="name mb-0 col-5" >{{ song.name }}</p>
-            <p class="duration mb-0 col-5 "> {{ song.duration }}</p>
+            <p class="duration mb-0 col-3 "> {{ song.duration }}</p>
+            <div class="btn-group">
+                <button class="btn btn-success">play</button>
+                <button class="btn btn-info"><RouterLink class="nav-link" :to="`/editSong/${song._id}`">Edit</RouterLink></button>
+                <button class="btn btn-danger" @click="$emit('removeSong')">Delete</button>
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { defineProps} from 'vue';
 
 const props = defineProps({
     song: {
@@ -17,6 +22,7 @@ const props = defineProps({
         required: true
     }
 });
+const emit = defineEmits(['removeSong']);
 </script>
 
 <style scoped>

@@ -23,7 +23,7 @@
       <h2 class="mt-5">Songs</h2>
       <div class="row">
         <div class="col-md-12">
-          <Song v-for="song in songs" :key="song._id" :song="song" />
+          <Song @removeSong="removeSong(song._id)" v-for="song in songs" :key="song._id" :song="song" />
         </div>
       </div>
     </div>
@@ -116,6 +116,18 @@ const removeAlbum = async () => {
       config
     );
     router.push(`/artist/${artist.value._id}`)
+  } catch (err) {
+    console.log(err.response.message);
+  }
+};
+
+const removeSong = async (id) => {
+  try {
+    await axios.delete(
+      `http://localhost:3910/api/song/remove/${id}`,
+      config
+    );
+    fetchSongs();
   } catch (err) {
     console.log(err.response.message);
   }
