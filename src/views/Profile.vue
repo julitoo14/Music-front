@@ -10,6 +10,32 @@
       <button v-if="!showEdit" @click="showEdit = true" class="btn btn-light">
         Edit
       </button>
+      <button class="btn btn-light" @click="showAddPlaylist">
+        Add Playlist
+      </button>
+    </div>
+
+    <div class="container-fluid ">
+      <table v-if=(showTable) class="table table-hover">
+        <thead >
+          <tr>
+            <th scope="col">Playlist Name</th>
+            <th scope="col">Number of Songs</th>
+            <th scope="col">options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="playlist in playlists" :key="playlist._id">
+            <td>{{ playlist.name }}</td>
+            <td>{{ playlist.songs.length }}</td>
+            <td><div class="btn-group">
+              <button class="btn btn-primary"><RouterLink class="nav-link" :to="`/playlist/${playlist._id}`">Visit</RouterLink></button>
+              <button class="btn btn-danger">Remove</button>
+            </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <form @submit.prevent v-if="showEdit">
@@ -84,6 +110,14 @@
         @close="alert.show = false"
       />
     </form>
+    <div class="container-fluid"></div>
+
+    <AddPlaylist
+      v-if="showPlaylistModal"
+      @close="showPlaylistModal = false"
+      :show="showPlaylistModal"
+      @update="getPlaylists()"
+    />
   </div>
 </template>
 
@@ -91,19 +125,30 @@
 import axios from "axios";
 import { onMounted, ref, reactive } from "vue";
 import Alert from "../components/Alert.vue";
-let name = ref("");
-let image = ref("");
-let nick = ref("");
-let email = ref("");
-let surname = ref("");
-let avatarUrl = ref("");
-let showEdit = ref(false);
-let file0 = ref();
-let alert = reactive({
+import AddPlaylist from "../components/AddPlaylist.vue";
+const name = ref("");
+const image = ref("");
+const nick = ref("");
+const email = ref("");
+const surname = ref("");
+const avatarUrl = ref("");
+const showEdit = ref(false);
+const showPlaylistModal =ref('');
+const showTable = ref(false);
+const playlists = ref([]);
+const file0 = ref();
+const alert = reactive({
   show: false,
   message: "",
   type: "danger",
 });
+
+
+const showAddPlaylist = () => {
+  showPlaylistModal.value = true;
+};
+
+
 
 const handleFileUpload = (event) => {
   file0.value = event.target.files[0];
@@ -134,6 +179,26 @@ const upload = async () => {
     });
 };
 
+const getPlaylists = async () => {
+  const token = localStorage.getItem("token");
+  const id = localStorage.getItem("id");
+  try {
+    const res = await axios.get(
+      `http://localhost:3910/api/playlist/list/${id}`,
+      {
+        headers: {
+          Authorization: `${token}`,
+        },
+      }
+    );
+    playlists.value = res.data.playlists;
+    console.log(res.data.playlists);
+  } catch (err) {
+    showAlert(err.response.data.message, "danger");
+  }
+};
+
+
 const update = async (name, surname, nick, email) => {
   const token = localStorage.getItem("token");
   try{
@@ -145,6 +210,10 @@ const update = async (name, surname, nick, email) => {
 }
 
 onMounted(async () => {
+  await getPlaylists();
+  if(playlists.value.length > 0){
+  showTable.value = true;
+  }
   const id = localStorage.getItem("id");
   const token = localStorage.getItem("token");
 
@@ -181,6 +250,28 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+div{
+  cursor: default;
+}
+
+.table td{
+  background-color: black;
+  color: white;
+  border: black solid 1px;
+}
+
+.table{
+  border: none;
+  color: white;
+}
+
+.table th{
+  background-color: rgb(25, 24, 24);
+  color: white;
+  border: black solid 1px;
+}
+
+
 .avatar {
   width: 12em;
   height: 12em;

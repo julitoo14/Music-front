@@ -1,59 +1,87 @@
 <template>
-    <div class="songsContainer d-flex align-items-center py-3">
-        <div class="song flex-grow-1">
-            <p class="track mb-0 col-1">{{ song.track }}</p>
-            <p class="name mb-0 col-5" >{{ song.name }}</p>
-            <p class="duration mb-0 col-3 "> {{ song.duration }}</p>
-            <div class="btn-group">
-                <button class="btn btn-success">play</button>
-                <button class="btn btn-info"><RouterLink class="nav-link" :to="`/editSong/${song._id}`">Edit</RouterLink></button>
-                <button class="btn btn-danger" @click="$emit('removeSong')">Delete</button>
-            </div>
+  <tbody>
+    <tr>
+      <th v-if="props.track">{{ song.track }}</th>
+      <td style="font-size: 1.5em; text-align:left">{{ song.name }}</td>
+      <td style="font-size: 1.1em; text-align:left">{{ song.duration }}</td>
+      <td>
+        <div class="btn-group" v-if="playlistview ">
+          <button class="btn btn-success" @click="$emit('playSong')">play</button>
+          <button class="btn btn-danger" @click="$emit('removeSong')">Delete</button>
         </div>
-    </div>
+        <div v-else-if="admin" class="btn-group">
+          <button class="btn btn-success" @click="$emit('playSong')">play</button>
+        <button class="btn btn-primary" @click="$emit('addSong',selectSong())">+</button>
+        <button class="btn btn-info">
+          <RouterLink class="nav-link" :to="`/editSong/${song._id}`"
+            >Edit</RouterLink
+          >
+        </button>
+        <button class="btn btn-danger" @click="$emit('removeSong')">
+          Delete
+        </button>
+      </div>
+      <div v-else class="btn-group">
+        <button class="btn btn-success" @click="$emit('playSong')">play</button>
+        <button class="btn btn-primary" @click="$emit('addSong', selectSong())">+</button>
+      </div>
+      </td>
+    </tr>
+  </tbody>
+  
 </template>
+<style scoped>
+  
+
+  td{
+    background-color: black;
+    color: white;
+    border: black solid 1px;
+    text-align: center;
+  }
+
+  th{
+    background-color: rgb(0, 0, 0);
+    color: white;
+    border: black solid 1px;
+    text-align: center;
+    font-size: 1.6em;
+  }
+
+</style>
+
 
 <script setup>
-import { defineProps} from 'vue';
-
+import { onMounted, ref } from "vue";
+const admin = ref(false);
 const props = defineProps({
-    song: {
-        type: Object,
-        required: true
-    }
+  song: {
+    type: Object,
+    required: true,
+  },
+  track: {
+    type: Boolean,
+    default: true,
+  },
+  playlistview: {
+    type: Boolean,
+    default: false,
+  },
 });
-const emit = defineEmits(['removeSong']);
+const emit = defineEmits(["removeSong", "playSong", "getSongId"]);
+
+const selectSong = () => {
+  localStorage.setItem('songId', props.song._id) 
+};
+
+onMounted(() => {
+  const token = localStorage.getItem("token");
+  const decoded = JSON.parse(atob(token.split(".")[1]));
+  const role = decoded.role;
+  if (role == "role_admin") {
+    admin.value = true;
+  }
+});
 </script>
 
-<style scoped>
 
-.songsContainer{
-    padding: 2em;
-}
-
-.song{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-}
-
-.name, .track {
-    font-size: 2em;
-    font-weight: bold;
-}
-
-.duration{
-    font-size: 1em;
-}
-
-/* Bootstrap classes */
-.py-3 {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-}
-
-.flex-grow-1 {
-    flex-grow: 1 !important;
-}
-</style>

@@ -33,7 +33,7 @@
         />
       </div>
       <div class="mb-3">
-        <label for="file0" class="form-label">Image: </label>
+        <label for="file0" class="form-label">File: </label>
         <input
           name="file0"
           type="file"

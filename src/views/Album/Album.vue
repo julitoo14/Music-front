@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="albumView">
     <div class="container-fluid">
       <div class="row info p-3">
         <div class="col-md-3">
@@ -10,27 +10,64 @@
           <h2>{{ artist.name }}</h2>
           <p>{{ album.description }}</p>
           <p>Year: {{ album.year }}</p>
-          <div class="btn-group">
-            <button class="btn-success btn" ><RouterLink class="nav-link" :to="`/addSong/${id}`" >Add Song</RouterLink></button>
-            <button class="btn-primary btn"><RouterLink class="nav-link" :to="`/editAlbum/${id}`">Edit Album</RouterLink></button>
+          <div v-if="admin" class="btn-group">
+            <button class="btn-success btn">
+              <RouterLink class="nav-link" :to="`/addSong/${id}`"
+                >Add Song</RouterLink
+              >
+            </button>
+            <button class="btn-primary btn">
+              <RouterLink class="nav-link" :to="`/editAlbum/${id}`"
+                >Edit Album</RouterLink
+              >
+            </button>
             <button class="btn-danger btn" @click="removeAlbum">Remove</button>
           </div>
         </div>
       </div>
     </div>
-    
-    <div class="songs container-fluid">
-      <h2 class="mt-5">Songs</h2>
-      <div class="row">
-        <div class="col-md-12">
-          <Song @removeSong="removeSong(song._id)" v-for="song in songs" :key="song._id" :song="song" />
-        </div>
-      </div>
+
+    <div class="container-fluid ">
+      <table v-if=(showTable) class="table table-hover">
+        <thead >
+          <tr>
+            <th scope="col">#</th>
+            <th style="text-align:left" scope="col">Name</th>
+            <th style="text-align:left" scope="col">Duration</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <Song
+          @playSong="$emit('playSong', song.track, files)"
+          @removeSong="removeSong(song._id)"
+          @addSong="showAdd()"
+          v-for="song in songs"
+          :key="song._id"
+          :song="song"
+          :track="true"
+        />
+        
+      </table>
     </div>
+
+    <AddSongToPlaylist
+      v-if="showAddPlaylistModal"
+      @close="showAddPlaylistModal = false"
+      :show="showAddPlaylistModal"
+      @update="getPlaylists()"
+    />
+    
   </div>
-  </template>
+</template>
 
 <style scoped>
+
+th{
+  background-color: rgb(32, 31, 31);
+  color: white;
+  text-align: center;
+  font-size: 1.2em;
+}
 .info {
   color: white;
   background-color: rgba(0, 0, 0, 0.599);
@@ -38,6 +75,10 @@
 .songs {
   color: white;
   background-color: rgba(0, 0, 0, 0.599);
+}
+
+.albumView {
+  height: 90%;
 }
 </style>
 
@@ -47,18 +88,31 @@ import { useRoute } from "vue-router";
 import axios from "axios";
 import { router } from "../../routes";
 import Song from "../../components/Song.vue";
+import AddSongToPlaylist from "../../components/AddSongToPlaylist.vue";
 
 const album = ref("");
 const artist = ref("");
 const albumImage = ref("");
 const songs = ref([]);
-
+const files = ref([]);
+const showTable = ref(false);
+const admin = ref(false);
+const songId = ref("");
+const showAddPlaylistModal = ref(false);
 const route = useRoute();
 const id = ref(route.params.id);
 const config = {
   headers: {
     Authorization: localStorage.getItem("token"),
   },
+};
+
+const showAdd = () => {
+  showAddPlaylistModal.value = true;
+};
+
+const getSongId = (song) => {
+  songId.value = song;
 };
 
 const fetchAlbum = async () => {
@@ -101,13 +155,35 @@ const fetchSongs = async () => {
       `http://localhost:3910/api/song/listByAlbum/${route.params.id}`,
       config
     );
-    console.log(response.data.songs)
+
     songs.value = response.data.songs;
+
+    songs.value.forEach(async (song) => {
+      const res = await axios.get(
+        `http://localhost:3910/api/song/file/${song.file}`,
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+          responseType: "arraybuffer",
+        }
+      );
+
+      const blob = new Blob([res.data], {
+        type: res.headers["content-type"],
+      });
+
+      const fileUrl = URL.createObjectURL(blob);
+
+      files.value.push({ url: fileUrl, name: song.name, track: song.track });
+      if(files.value.length > 0){
+        showTable.value = true;
+      }
+    });
   } catch (err) {
-    console.log(err.response.message);
+    console.log(err);
   }
 };
-
 
 const removeAlbum = async () => {
   try {
@@ -115,7 +191,7 @@ const removeAlbum = async () => {
       `http://localhost:3910/api/album/remove/${route.params.id}`,
       config
     );
-    router.push(`/artist/${artist.value._id}`)
+    router.push(`/artist/${artist.value._id}`);
   } catch (err) {
     console.log(err.response.message);
   }
@@ -123,10 +199,7 @@ const removeAlbum = async () => {
 
 const removeSong = async (id) => {
   try {
-    await axios.delete(
-      `http://localhost:3910/api/song/remove/${id}`,
-      config
-    );
+    await axios.delete(`http://localhost:3910/api/song/remove/${id}`, config);
     fetchSongs();
   } catch (err) {
     console.log(err.response.message);
@@ -136,6 +209,13 @@ const removeSong = async (id) => {
 onMounted(() => {
   fetchAlbum();
   fetchSongs();
-  
+
+  const token = localStorage.getItem("token");
+  const decoded = JSON.parse(atob(token.split(".")[1]));
+  const role = decoded.role;
+  console.log(role);
+  if (role == "role_admin") {
+    admin.value = true;
+  }
 });
 </script>

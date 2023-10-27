@@ -1,40 +1,63 @@
-
 <template>
-  
   <div class="view" :style="{ flexDirection: logged ? 'block' : 'flex' }">
     <Navbar />
-    <RouterView style="overflow-y:auto; width: 100%;"></RouterView>
+    <RouterView
+      @playSong="playSong"
+      style="position: relative; overflow-y: auto; width: 100%"
+    ></RouterView>
+    <Mp3Player :files="file" @ended="playNextSong" ></Mp3Player>
   </div>
 </template>
 
 <style scoped>
-.view{
-  background: linear-gradient(180deg, rgba(12,12,12,1) 0%, rgba(37,37,38,1) 53%, rgba(54,55,55,1) 86%);
+.view {
+  background: linear-gradient(
+    180deg,
+    rgba(12, 12, 12, 1) 0%,
+    rgba(37, 37, 38, 1) 53%,
+    rgba(54, 55, 55, 1) 86%
+  );
   width: 100%;
   height: 100vh;
   display: flex;
 }
-
-
-
 </style>
 
 <script setup>
 import { RouterView } from "vue-router";
-import Navbar from "./components/Navbar.vue"
-import { ref, onMounted } from 'vue';
+import Navbar from "./components/Navbar.vue";
+import Mp3Player from "./components/Mp3Player.vue";
+import { ref, onMounted } from "vue";
 const logged = ref(false);
+const file = ref("");
+const playlist = ref([]);
+const currentTrack = ref(0);
 
-
-  onMounted(async () =>{
-    if(localStorage.getItem('token')){
-    logged.value = true;   
-  }else{
-      logged.value = false;
+onMounted(async () => {
+  if (localStorage.getItem("token")) {
+    logged.value = true;
+  } else {
+    logged.value = false;
   }
 });
 
+const playSong = async (track, files) => {
+  playlist.value = files;
+  currentTrack.value = track;
+  // Search for song in playlist based on track
+  const song = playlist.value.find((song ) => song.track === currentTrack.value);  
+  file.value = song.url;
+};
 
-
+const playNextSong = () => {
+  if (currentTrack.value === playlist.value.length) {
+    currentTrack.value = 0;
+    file.value = "";
+    return;
+  }
+  currentTrack.value = currentTrack.value + 1;
+  const song = playlist.value.find((song) => song.track === currentTrack.value);
+  file.value = song.url;
+};
 
 </script>

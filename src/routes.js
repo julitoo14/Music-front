@@ -8,10 +8,11 @@ import Artists from './views/Artists.vue';
 import Artist from './views/Artist.vue';
 import EditArtist from './views/EditArtist.vue';
 import Album from './views/Album/Album.vue';
-import CreateAlbum from './views/CreateAlbum.vue';
+import CreateAlbum from './views/Album/CreateAlbum.vue';
 import EditAlbum from './views/Album/EditAlbum.vue';
 import AddSong from './views/Song/AddSong.vue';
-import EditSong from './views/Song/EditSong.vue'
+import EditSong from './views/Song/EditSong.vue';
+import Playlist from './views/Playlist.vue';
 
 const routes = [
     {
@@ -24,47 +25,87 @@ const routes = [
     },
     {
         path: '/',
-        component: Home
+        component: Home,
+        meta: {
+            requiresAuth: true
+        }
     }, 
     {
         path: '/profile/:id',
-        component: Profile
+        component: Profile,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/createArtist',
-        component: CreateArtist
+        component: CreateArtist,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/artists',
-        component: Artists
+        component: Artists,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/artist/:id',
-        component: Artist
+        component: Artist,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/editArtist/:id',
-        component: EditArtist
+        component: EditArtist,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/album/:id',
-        component: Album
+        component: Album,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/createAlbum/:artistId',
-        component: CreateAlbum
+        component: CreateAlbum,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/editAlbum/:id',
-        component: EditAlbum
+        component: EditAlbum,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/addSong/:albumId',
-        component: AddSong
+        component: AddSong,
+        meta: {
+            requiresAuth: true
+        }
     },
     {
         path: '/editSong/:id',
-        component: EditSong
+        component: EditSong,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/playlist/:id',
+        component: Playlist,
+        meta: {
+            requiresAuth: true
+        }
     }
 
 ]
@@ -74,4 +115,23 @@ const router = createRouter({
     routes,
   });
   
+  router.beforeEach((to, from, next) => {
+    const token = localStorage.getItem("token");
+    if (to.meta.requiresAuth && !token) {
+      next("/login");
+    } else if (token) {
+      const decodedToken = JSON.parse(atob(token.split(".")[1]));
+      const expirationDate = new Date(decodedToken.exp);
+      if (expirationDate <= new Date()) {
+        localStorage.removeItem("token");
+        next("/login");
+      } else {
+        next();
+      }
+    } else {
+      next();
+    }
+  });
+  
+
   export { router };

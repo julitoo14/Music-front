@@ -147,6 +147,13 @@ const register = async (
       });
   }
 };
+
+onMounted(() => {
+  if (localStorage.getItem("token")) {
+    router.push("/");
+  }
+});
+
 </script>
 
 <style scoped>

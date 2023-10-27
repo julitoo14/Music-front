@@ -64,7 +64,7 @@
   <script setup>
   import axios from "axios";
   import { ref, reactive } from "vue";
-  import Alert from "../components/Alert.vue";
+  import Alert from "../../components/Alert.vue";
   import { useRouter, useRoute } from "vue-router";
   
   const title = ref("");
