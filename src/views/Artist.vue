@@ -37,6 +37,7 @@
   width: 100%;
   background-size: cover;
   background-position: center;
+  background-repeat: repeat-y;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -63,6 +64,7 @@
   width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   text-align: center;
+  margin-bottom: 5%;
 }
 
 .albums-container {

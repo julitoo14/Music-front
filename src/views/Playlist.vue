@@ -35,6 +35,7 @@ const showTable = ref(true);
 const files = ref([]);
 
 const fetchSongs = async () =>{
+    songs.value = [];
     try{
         const response = await axios.get(`http://localhost:3910/api/playlist/songlist/${route.params.id}`,{
             headers: {
@@ -75,15 +76,15 @@ const fetchSongs = async () =>{
 
 const removeSong = async (id) => {
     try{
-        const response = await axios.delete(`http://localhost:3910/api/playlist/song/${route.params.id}/${id}`,{
+        const response = await axios.delete(`http://localhost:3910/api/playlist/removeSong/${id}`,{
             headers: {
                 Authorization: `${localStorage.getItem("token")}`,
             },
         });
-        showAlert(response.data.message, "info");
+        console.log(response.data.message);
         fetchSongs();
     }catch(error){
-        console.log(error);
+        alert(error);
     }
 }
 

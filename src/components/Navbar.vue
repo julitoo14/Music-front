@@ -13,19 +13,19 @@
       <li>
         <RouterLink
           class="link d-inline-flex nav-link link-light p-1 align-items-center"
-          :to="`/profile/${id}`"
+          to="/"
         >
-          <ProfileIcon />
-          <p class="m-1">Profile</p>
+          <HomeIcon />
+          <p class="m-1">Home</p>
         </RouterLink>
       </li>
       <li>
         <RouterLink
           class="link d-inline-flex nav-link link-light p-1 align-items-center"
-          to="/"
+          :to="`/profile/${id}`"
         >
-          <LibraryIcon />
-          <p class="m-1">Library</p>
+          <ProfileIcon />
+          <p class="m-1">Profile</p>
         </RouterLink>
       </li>
       <li>
@@ -116,7 +116,7 @@
 <script setup>
 import { RouterLink, useRouter } from "vue-router";
 import { watch, ref, onMounted } from "vue";
-import LibraryIcon from "../assets/icons/LibraryIcon.vue";
+import HomeIcon from "../assets/icons/HomeIcon.vue";
 import ArtistIcon from "../assets/icons/ArtistIcon.vue";
 import ProfileIcon from "../assets/icons/ProfileIcon.vue";
 import LoginIcon from "../assets/icons/LoginIcon.vue";

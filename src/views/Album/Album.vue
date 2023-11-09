@@ -54,7 +54,6 @@
       v-if="showAddPlaylistModal"
       @close="showAddPlaylistModal = false"
       :show="showAddPlaylistModal"
-      @update="getPlaylists()"
     />
     
   </div>
@@ -175,7 +174,7 @@ const fetchSongs = async () => {
 
       const fileUrl = URL.createObjectURL(blob);
 
-      files.value.push({ url: fileUrl, name: song.name, track: song.track });
+      files.value.push({ url: fileUrl, name: song.name, track: song.track, _id: song._id, album: song.album });
       if(files.value.length > 0){
         showTable.value = true;
       }
@@ -213,7 +212,6 @@ onMounted(() => {
   const token = localStorage.getItem("token");
   const decoded = JSON.parse(atob(token.split(".")[1]));
   const role = decoded.role;
-  console.log(role);
   if (role == "role_admin") {
     admin.value = true;
   }

@@ -68,7 +68,7 @@ const props = defineProps({
     default: false,
   },
 });
-const emit = defineEmits(["removeSong", "playSong", "getSongId"]);
+const emit = defineEmits(["removeSong", "playSong", "getSongId", "addSong"]);
 
 const selectSong = () => {
   localStorage.setItem('songId', props.song._id) 

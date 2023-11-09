@@ -30,7 +30,7 @@
             <td>{{ playlist.songs.length }}</td>
             <td><div class="btn-group">
               <button class="btn btn-primary"><RouterLink class="nav-link" :to="`/playlist/${playlist._id}`">Visit</RouterLink></button>
-              <button class="btn btn-danger">Remove</button>
+              <button @click="removePlaylist(playlist._id)" class="btn btn-danger">Remove</button>
             </div>
             </td>
           </tr>
@@ -192,7 +192,6 @@ const getPlaylists = async () => {
       }
     );
     playlists.value = res.data.playlists;
-    console.log(res.data.playlists);
   } catch (err) {
     showAlert(err.response.data.message, "danger");
   }
@@ -204,6 +203,21 @@ const update = async (name, surname, nick, email) => {
   try{
     const res = await axios.put("http://localhost:3910/api/user/update",{ name, surname, nick, email },{headers: {Authorization: `${token}`}})
     showAlert(res.data.message, "info");
+  }catch(err){
+    showAlert(err.response.data.message, "danger");
+  }
+}
+
+const removePlaylist = async (id) => {
+  const token = localStorage.getItem("token");
+  try{
+    const res = await axios.delete(`http://localhost:3910/api/playlist/remove/${id}`,{
+      headers: {
+        Authorization: `${token}`,
+      },
+    });
+    showAlert(res.data.message, "info");
+    getPlaylists();
   }catch(err){
     showAlert(err.response.data.message, "danger");
   }

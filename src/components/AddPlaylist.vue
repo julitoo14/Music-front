@@ -122,7 +122,7 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style scoped>
 .modal-backdrop {
   opacity: 0.5 !important;
 }

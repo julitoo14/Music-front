@@ -25,7 +25,7 @@
             <form>
               <div v-if="!showError" class="mb-3">
                 <label for="playlist" class="form-label">Select Playlist </label>
-                <select  class="form-control" id="playlist" v-model="selectedPlaylist">
+                <select class="form-control" id="playlist" v-model="selectedPlaylist">
                   <option v-for="playlist in playlists" :key="playlist.id" :value="playlist._id">{{ playlist.name }}</option>
                 </select>
               </div >
@@ -70,10 +70,7 @@
   
   const modal = ref(null);
   const selectedPlaylist = ref(null);
-  const token = localStorage.getItem("token");
   const playlists = ref([]);
-  const decoded = JSON.parse(atob(token.split(".")[1]));
-  const Userid = decoded.id;
   const showError = ref(false);
   const alert = reactive({
     type: "",
@@ -105,9 +102,8 @@
             config
         );
         showAlert("info", response.data.message);
-        emit("update");
         } catch (err) {
-        showAlert("danger", err.response.data.message);
+        console.log("danger", err);
     } 
   };
   
@@ -150,7 +146,7 @@
   });
   </script>
   
-  <style>
+  <style scoped>
   .modal-backdrop {
     opacity: 0.5 !important;
   }
