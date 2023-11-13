@@ -41,3 +41,20 @@ export async function deleteSong(id) {
     return response.data; 
 }
 
+//posts
+export async function saveAlbum(album) {
+    const response = await axios.post(`http://localhost:3910/api/album/save`, album, config);
+    return response.data; 
+}
+
+//puts
+export async function uploadAlbumImage(image, id) {
+    const response = await axios.put(`http://localhost:3910/api/album/upload/${id}`, image, {
+        headers: {
+          Authorization: `${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    return response.data; 
+}
+

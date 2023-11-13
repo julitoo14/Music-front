@@ -20,6 +20,13 @@
           id="description"
           v-model="album.description"
         />
+        <label for="description">Year:</label>
+        <input
+          type="text"
+          class="form-control"
+          id="year"
+          v-model="album.year"
+        />
         <label for="file0" class="form-label">Image: </label>
         <input
           name="file0"
@@ -28,7 +35,7 @@
           @change="handleFileUpload"
         />
         <button
-          @click="update(album.title, album.description)"
+          @click="update(album.title, album.description, album.year)"
           type="submit"
           class="m-3 btn btn-primary"
         >
@@ -103,13 +110,13 @@ const upload = async () => {
   }
 };
 
-const update = async (title, description) => {
+const update = async (title, description, year) => {
   upload();
   const token = localStorage.getItem("token");
   try {
     const res = await axios.put(
       `http://localhost:3910/api/album/update/${route.params.id}`,
-      { title, description },
+      { title, description, year },
       { headers: { Authorization: `${token}` } }
     );
     console.log(res.data);

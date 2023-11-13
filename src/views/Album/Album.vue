@@ -13,8 +13,8 @@
           <div v-if="admin" class="btn-group">
             <button class="btn-success btn">
               <RouterLink class="nav-link" :to="`/addSong/${albumId}`"
-                >Add Song</RouterLink
-              >
+                >Add Song
+              </RouterLink>
             </button>
             <button class="btn-primary btn">
               <RouterLink class="nav-link" :to="`/editAlbum/${albumId}`"
@@ -60,11 +60,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import axios from "axios";
 import { router } from "../../routes";
 import Song from "../../components/Song.vue";
 import AddSongToPlaylist from "../../components/AddSongToPlaylist.vue";
-import {getAlbum, getSongsByAlbum, deleteAlbum, deleteSong} from "../../composables/apiServices";
+import {
+  getAlbum,
+  getSongsByAlbum,
+  deleteAlbum,
+  deleteSong,
+} from "../../composables/apiServices";
 
 const route = useRoute();
 const album = ref("");
@@ -76,13 +80,10 @@ const showTable = ref(false);
 const admin = ref(false);
 const showAddPlaylistModal = ref(false);
 const albumId = route.params.id;
-const config = {
-  headers: {
-    Authorization: localStorage.getItem("token"),
-  },
-};
 
-const showAdd = () => {showAddPlaylistModal.value = true};
+const showAdd = () => {
+  showAddPlaylistModal.value = true;
+};
 
 const fetchAlbum = async () => {
   try {
@@ -103,13 +104,17 @@ const fetchSongs = async () => {
     //get songs files
     songs.value.forEach(async (song) => {
       files.value.push({
-        url: `http://localhost:3910/api/song/file/${song.file}?token=${localStorage.getItem('token')}`,
+        url: `http://localhost:3910/api/song/file/${
+          song.file
+        }?token=${localStorage.getItem("token")}`,
         name: song.name,
         track: song.track,
         _id: song._id,
         album: song.album,
       });
-      if (files.value.length > 0) {showTable.value = true;}
+      if (files.value.length > 0) {
+        showTable.value = true;
+      }
     });
   } catch (err) {
     console.log(err.response.data.message);

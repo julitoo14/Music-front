@@ -4,34 +4,15 @@
         <div class="col-md-6">
           <h1 class="text-center mb-4">Create Album</h1>
           <form>
-            <div class="form-group">
-              <label for="title">Title</label>
+            <div class="form-group" v-for="field in fields" :key="field.id">
+              <label :for="field.id">{{ field.label }}</label>
               <input
-                type="text"
                 class="form-control"
-                v-model="title"
-                id="title"
-                placeholder="Enter title"
+                v-model="field.model.value"
+                :id="field.id"
+                :placeholder="field.placeholder"
               />
             </div>
-            <div class="form-group">
-              <label for="description">Description</label>
-              <input
-                class="form-control"
-                v-model="description"
-                id="description"
-                placeholder="Enter description"
-              >
-            </div>
-            <div class="form-group">
-                <label for="year">Year</label>
-                <input
-                  class="form-control"
-                  v-model="year"
-                  id="year"
-                  placeholder="Enter year"
-                >
-              </div>
             <div class="form-group">
               <div class="custom-file">
                 <input
@@ -45,7 +26,7 @@
             <button
               type="button"
               class="btn btn-primary btn-block mt-4"
-              @click="saveAlbum"
+              @click="addAlbum"
             >
               Save
             </button>
@@ -62,17 +43,22 @@
   </template>
   
   <script setup>
-  import axios from "axios";
   import { ref, reactive, onMounted } from "vue";
   import Alert from "../../components/Alert.vue";
   import { useRouter, useRoute } from "vue-router";
+  import { saveAlbum, uploadAlbumImage } from "../../composables/apiServices";
   
   const title = ref("");
   const year = ref("");
   const description = ref("");
   const image = ref("default.png");
   const router = useRouter();
-    const route = useRoute();
+  const route = useRoute();
+  const fields = [
+      { id: 'title', label: 'Title', model: title, placeholder: 'Enter title' },
+      { id: 'description', label: 'Description', model: description, placeholder: 'Enter description' },
+      { id: 'year', label: 'Year', model: year, placeholder: 'Enter year' },
+    ];
   let alert = reactive({
     show: false,
     message: "",
@@ -89,52 +75,30 @@
     image.value = event.target.files[0];
   };
   
-  const saveAlbum = async () => {
+  const addAlbum = async () => {
     const album = {
         title: title.value,
         description: description.value,
         year: year.value,
         artist: route.params.artistId,
     };
-    
-    console.log(album);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3910/api/album/save",
-        album,
-        {
-          headers: {
-            Authorization: `${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await saveAlbum(album);
   
-      const savedAlbum = response.data.album;
+      const savedAlbum = res.album;
       const id = savedAlbum._id;
   
       if (image.value == "default.png") {
-        showAlert("Artist saved successfully!",'info');
+        router.push(`/album/${id}`);
         return;
       }
+
       const imageFormData = new FormData();
       imageFormData.append("file0", image.value);
-  
-      await axios.put(
-        `http://localhost:3910/api/album/upload/${id}`,
-        imageFormData,
-        {
-          headers: {
-            Authorization: `${localStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-  
-      showAlert("Album saved successfully!", 'info');
-      setTimeout(() => {
-        router.push(`/album/${id}`);
-      }, 1000);
+      await uploadAlbumImage(imageFormData, id); 
+      router.push(`/album/${id}`);
+
     } catch (error) {
       console.error(error);
       showAlert("Failed to save artist!");
@@ -153,10 +117,8 @@
   
   <style scoped>
   .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
   }
-  form{
-      margin-bottom: 3em;
-  }
+
   </style>
   
