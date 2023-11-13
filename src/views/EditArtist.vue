@@ -70,6 +70,7 @@ const handleFileUpload = (event) => {
 
 
 const upload = async () => {
+  let validation = true;
   if(file0.value){
       console.log(file0.value)
       let formData = new FormData();
@@ -84,25 +85,31 @@ const upload = async () => {
         })
         .then((res) => {
             showAlert("Image uploaded succesfully", "info");
+            validation = true;
         })
         .catch((err) => {
             showAlert(err.response.data.message, "danger");
+            validation = false;
         });
     }
+    return validation;
 };
 
 const update = async (name, description) => {
 
-  upload();
-  const token = localStorage.getItem("token");
-  try{
-    const res = await axios.put(`http://localhost:3910/api/artist/update/${route.params.id}`,{ name, description },{headers: {Authorization: `${token}`}})
-    showAlert(res.data.message, "info");
-    setTimeout(() => {
-      router.push(`/artist/${route.params.id}`);
-    }, 2000);
-  }catch(err){
-    showAlert(err.response.data.message, "danger");
+  const uploaded = await upload();
+  console.log(uploaded)
+  if(uploaded){
+    const token = localStorage.getItem("token");
+    try{
+      const res = await axios.put(`http://localhost:3910/api/artist/update/${route.params.id}`,{ name, description },{headers: {Authorization: `${token}`}})
+      showAlert(res.data.message, "info");
+      setTimeout(() => {
+        router.push(`/artist/${route.params.id}`);
+      }, 2000);
+    }catch(err){
+      showAlert(err.response.data.message, "danger");
+    }
   }
 }
 
@@ -123,5 +130,13 @@ const fetchArtist = async () => {
   }
 };
 
-onMounted(fetchArtist);
+onMounted( () => {
+  fetchArtist();
+  const token = localStorage.getItem("token");
+  const decoded = JSON.parse(atob(token.split(".")[1]));
+  const role = decoded.role;
+  if (role != "role_admin") {
+    router.push("/");
+  }
+});
 </script>

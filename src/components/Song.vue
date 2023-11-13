@@ -1,6 +1,6 @@
 <template>
   <tbody>
-    <tr>
+    <tr class="song" @click="$emit('playSong')">
       <th v-if="props.track">{{ song.track }}</th>
       <td style="font-size: 1.5em; text-align:left">{{ song.name }}</td>
       <td style="font-size: 1.1em; text-align:left">{{ song.duration }}</td>
@@ -32,21 +32,29 @@
 </template>
 <style scoped>
   
+.song{
+  cursor: pointer;
+}
 
   td{
     background-color: black;
     color: white;
-    border: black solid 1px;
     text-align: center;
+    border: none;
   }
 
   th{
     background-color: rgb(0, 0, 0);
     color: white;
-    border: black solid 1px;
     text-align: center;
     font-size: 1.6em;
+    border: none;
   }
+
+  tr:hover td, tr:hover th {
+    background-color: rgb(42, 41, 41);
+  }
+
 
 </style>
 

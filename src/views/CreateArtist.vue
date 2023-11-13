@@ -54,7 +54,7 @@
 
 <script setup>
 import axios from "axios";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import Alert from "../components/Alert.vue";
 import { useRouter } from "vue-router";
 
@@ -118,13 +118,22 @@ const saveArtist = async () => {
 
     showAlert("Artist saved successfully!", 'info');
     setTimeout(() => {
-      router.push(`/artist/`);
+      router.push(`/artist/${artistId}`);
     }, 2000);
   } catch (error) {
     console.error(error);
     showAlert("Failed to save artist!");
   }
 };
+
+onMounted( () => {
+  const token = localStorage.getItem("token");
+  const decoded = JSON.parse(atob(token.split(".")[1]));
+  const role = decoded.role;
+  if (role != "role_admin") {
+    router.push("/");
+  }
+});
 </script>
 
 <style scoped>

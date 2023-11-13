@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
+import { reactive, ref , onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 import Alert from "../../components/Alert.vue";
@@ -137,4 +137,13 @@ const saveSong = async () => {
     showAlert("Failed to save artist!");
   }
 };
+
+onMounted( () => {
+  const token = localStorage.getItem("token");
+  const decoded = JSON.parse(atob(token.split(".")[1]));
+  const role = decoded.role;
+  if (role != "role_admin") {
+    router.push("/");
+  }
+});
 </script>

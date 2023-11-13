@@ -103,7 +103,11 @@
         );
         showAlert("info", response.data.message);
         } catch (err) {
-        console.log("danger", err);
+        if(selectedPlaylist.value){
+            showAlert("danger", err.response.data.message);
+        } else {
+            showAlert("danger", "You must select a playlist");
+        }
     } 
   };
   

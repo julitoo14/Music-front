@@ -164,7 +164,13 @@ const update = async () => {
   }
 };
 
-onMounted(() => {
+onMounted( () => {
   fetchSong();
+  const token = localStorage.getItem("token");
+  const decoded = JSON.parse(atob(token.split(".")[1]));
+  const role = decoded.role;
+  if (role != "role_admin") {
+    router.push("/");
+  }
 });
 </script>

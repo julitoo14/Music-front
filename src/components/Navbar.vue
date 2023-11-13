@@ -4,7 +4,7 @@
       class="d-flex align-items-center p-3 mb-3 mb-md-0 me-md-auto link-light text-decoration-none flex-wrap justify-content-center"
       to="/"
     >
-      <img class="logo" src="/logo.svg" alt="" />
+      <img class="logo" src="/logo.png" alt="" />
       <h2 class="m-2">SoundJam</h2>
     </RouterLink>
     <hr />
@@ -63,7 +63,7 @@
           class="link d-inline-flex nav-link link-light p-1 align-items-center"
           to="/register"
         >
-          <LibraryIcon />
+          
           <p class="m-1">Sign Up</p>
         </RouterLink>
       </li>
@@ -80,7 +80,7 @@
         aria-expanded="false"
       >
         <img
-          :src="avatarUrl"
+          :src="`http://localhost:3910/api/user/avatar/${userImage}`"
           width="32"
           height="32"
           class="rounded-circle me-2"
@@ -95,16 +95,11 @@
           >
         </li>
         <li>
-          <RouterLink class="link-light dropdown-item" to="/settings/"
-            >Settings</RouterLink
-          >
-        </li>
-        <li>
           <hr class="dropdown-divider" />
         </li>
 
         <li>
-          <RouterLink class="link-light dropdown-item" @click="signOut" to="/"
+          <RouterLink class="link-light dropdown-item" @click="signOut" to="/login"
             >sign Out</RouterLink
           >
         </li>
@@ -114,7 +109,7 @@
 </template>
 
 <script setup>
-import { RouterLink, useRouter } from "vue-router";
+import { RouterLink} from "vue-router";
 import { watch, ref, onMounted } from "vue";
 import HomeIcon from "../assets/icons/HomeIcon.vue";
 import ArtistIcon from "../assets/icons/ArtistIcon.vue";
@@ -123,42 +118,24 @@ import LoginIcon from "../assets/icons/LoginIcon.vue";
 import Add from "../assets/icons/Add.vue";
 import axios from "axios";
 
-const avatarUrl = ref("");
 const admin = ref(false);
 const logged = ref("");
 const nick = ref("");
 const id = localStorage.getItem("id");
+const userImage = ref(null);
 
 onMounted(async () => {
   nick.value = localStorage.getItem("nick");
   const token = localStorage.getItem("token");
-  const decoded = JSON.parse(atob(token.split(".")[1]));
-  const role = decoded.role;
-  if (role == "role_admin") {
-    admin.value = true;
-  }
+
   if (localStorage.getItem("token")) {
+    const decoded = JSON.parse(atob(token.split(".")[1]));
+    const role = decoded.role;
+    userImage.value = decoded.image;
+    if (role == "role_admin") {
+      admin.value = true;
+    }
     logged.value = true;
-    await axios
-      .get(
-        `http://localhost:3910/api/user/avatar/${localStorage.getItem(
-          "image"
-        )}`,
-        {
-          headers: {
-            Authorization: `${token}`,
-          },
-          responseType: "arraybuffer",
-        }
-      )
-      .then((res) => {
-        const blob = new Blob([res.data], {
-          type: res.headers["content-type"],
-        });
-        const imageUrl = URL.createObjectURL(blob);
-        avatarUrl.value = imageUrl;
-        console.log(res.data);
-      });
   } else {
     logged.value = false;
   }
@@ -169,6 +146,7 @@ const signOut = () => {
   localStorage.removeItem("nick");
   localStorage.removeItem("id");
   logged.value = false;
+  router.push("/login");
 };
 
 watch(logged, (newVal) => {

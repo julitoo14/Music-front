@@ -1,29 +1,10 @@
 <template>
     <div class="homePage">
       <h1 class="tittle">Search for an Artist, a Song or Playlist</h1>
-      <input class="searchbar-full" v-model="searchTerm" @input="search" type="text" placeholder="Search Artist or Playlist">
-      
+      <input class="searchbar-full" v-model="searchTerm" @input="search" type="text" placeholder="What should you listen to today?">
+
       <div v-if="searchTerm" class="searchResults">
-        <ul class="list">
-          <li class="item " v-for="artist in state.artists" :key="artist._id">
-            <RouterLink class="row link" :to="`/artist/${artist._id}`">
-              <h3 class="col-2">Artist</h3>
-              <h1 class="col-8">{{ artist.name }}</h1>
-              <img :src="artist.image"  class="col-2 artist-image" >
-            </RouterLink>
-            
-          </li>
-
-          <li class="item" v-for="playlist in playlists" :key="playlist._id">
-            <RouterLink class="row link" :to="`/playlist/${playlist._id}`">
-              
-              <h3 class="col-2">Playlist</h3>
-              <h1 class="col-8">{{ playlist.name }}</h1>
-              <h3 class="col-2">{{ playlist.songs.length }} Songs</h3>
-              
-            </RouterLink>
-          </li>
-
+        <ul ref="list" class="list">
           <li class="item" v-for="song in searchSongsResults" :key="song._id">
             <RouterLink class="row link"  :to="`/album/${song.album}`">
               <h3 class="col-2">Song</h3>
@@ -31,10 +12,36 @@
               <h3 class="col-2">{{song.duration}}</h3>
             </RouterLink>
           </li>
+
+          <li class="item " v-for="artist in state.artists" :key="artist._id">
+            <RouterLink class="row link" :to="`/artist/${artist._id}`">
+              <h3 class="col-2">Artist</h3>
+              <h1 class="col-8">{{ artist.name }}</h1>
+              <img :src="`http://localhost:3910/api/artist/image/${artist.image}`"  class="col-2 artist-image" >
+            </RouterLink>  
+          </li>
+
+          <li class="item" v-for="playlist in playlists" :key="playlist._id">
+            <RouterLink class="row link" :to="`/playlist/${playlist._id}`">
+              <h3 class="col-2">Playlist</h3>
+              <h1 class="col-8">{{ playlist.name }}</h1>
+              <h3 class="col-2">{{ playlist.songs.length }} Songs</h3>  
+            </RouterLink>
+          </li>
+
+          <li class="item" v-for="album in albums" :key="album._id">
+            <RouterLink class="row link" :to="`/album/${album._id}`">
+              <h3 class="col-2">Album</h3>
+              <h1 class="col-8">{{ album.title }}</h1>
+              <img class="album-cover" :src="`http://localhost:3910/api/album/image/${album.image}`" alt="">
+            </RouterLink>
+          </li>
+
         </ul>
       </div>
-      <div class="searchPage" v-else-if="!searchTerm">
-      
+      <div class="hero" v-else-if="!searchTerm">
+        <h1>Welcome {{ nick }} to SoundJam!</h1>
+        <p>Explore, discover, and share yout favourite music!</p>
       </div>
   </div>
 
@@ -65,7 +72,13 @@
   .artist-image{
     margin: auto;
     width: 125px;
-    height: 75px;
+    height: 100px;
+  }
+
+  .album-cover{
+    margin: auto;
+    width: 125px;
+    height: 100px;
   }
 
   .list{
@@ -74,35 +87,52 @@
   }
   
   .homePage{
+    background: url('/fondo.png') no-repeat center center fixed;
+    background-size: cover;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     width: 100%;
     margin-bottom: 6em;
+    height: 100vh;
   }
   .searchbar-full{
     width: 70%;
-    background-color: white;
+    background-color: rgba(85, 84, 84, 0.429);
     border-radius: 10px;
-    border: black solid 1px;
-    height: 40px;
+    border: rgb(255, 255, 255) solid 3px;
+    height: 60px;
     text-align: center;
-    color: black;
+    color: rgb(255, 255, 255);
     margin-bottom: 1em;
+    font-size: large;
   }
   .searchResults{
     width: 70%;
     height: 100%;
   }
 
+  .hero {
+  text-align: center;
+  max-width: 800px;
+  position: absolute;
+  top: 40%;
+}
 
-  
+.hero h1 {
+  font-size: 2.5em;
+}
+
+.hero p {
+  font-size: 1.2em;
+}
 </style>
 
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import axios from "axios";
+
 
 const token = localStorage.getItem("token");
 const decoded = JSON.parse(atob(token.split(".")[1]));
@@ -111,6 +141,7 @@ const userId = decoded.id;
 console.log(userId)
 const showTable = ref(false);
 const playlists = ref([]);
+const albums = ref([]);
 const state = reactive({
           artists: [],
           page: 1,
@@ -162,33 +193,11 @@ const fetchArtists = () => {
           },})
               .then((response) => {
                   state.artists = response.data.artists;
-
-
-                  // Fetch image for each artist
-                  state.artists.forEach((artist) => {
-                      axios
-                          .get(`http://localhost:3910/api/artist/image/${artist.image}`, {
-                              headers: {
-                                  Authorization: `${localStorage.getItem("token")}`,
-                              },
-                              responseType: "arraybuffer",
-                          })
-                          .then((res) => {
-                              const blob = new Blob([res.data], {
-                                  type: res.headers["content-type"],
-                              });
-                              const imageUrl = URL.createObjectURL(blob);
-                              artist.image = imageUrl;
-                          })
-                          .catch((error) => {
-                              console.log(error.response.data.message);
-                          });
-                  });
               })
               .catch((error) => {
                   console.log(error.response.data.message);
               });
-      };
+};
 
 const search = async  () => {
     if (searchTerm.value.length > 0) {
@@ -208,7 +217,12 @@ const search = async  () => {
               Authorization: `${localStorage.getItem("token")}`,
           }});
         searchSongsResults.value = response.data.songs;
-
+      //albums search
+      const response2 = await axios.get(`http://localhost:3910/api/album/search/${searchTerm.value}`, {
+          headers: {
+              Authorization: `${localStorage.getItem("token")}`,
+          }});
+        albums.value = response2.data.albums;
     } else {
       fetchArtists();
       getPlaylists();

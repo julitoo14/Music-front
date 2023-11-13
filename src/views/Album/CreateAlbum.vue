@@ -2,7 +2,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-6">
-          <h1 class="text-center mb-4">Create Artist</h1>
+          <h1 class="text-center mb-4">Create Album</h1>
           <form>
             <div class="form-group">
               <label for="title">Title</label>
@@ -63,7 +63,7 @@
   
   <script setup>
   import axios from "axios";
-  import { ref, reactive } from "vue";
+  import { ref, reactive, onMounted } from "vue";
   import Alert from "../../components/Alert.vue";
   import { useRouter, useRoute } from "vue-router";
   
@@ -134,12 +134,21 @@
       showAlert("Album saved successfully!", 'info');
       setTimeout(() => {
         router.push(`/album/${id}`);
-      }, 2000);
+      }, 1000);
     } catch (error) {
       console.error(error);
       showAlert("Failed to save artist!");
     }
   };
+
+  onMounted( () => {
+  const token = localStorage.getItem("token");
+  const decoded = JSON.parse(atob(token.split(".")[1]));
+  const role = decoded.role;
+  if (role != "role_admin") {
+    router.push("/");
+  }
+});
   </script>
   
   <style scoped>

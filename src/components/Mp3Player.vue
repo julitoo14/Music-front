@@ -1,7 +1,7 @@
 <template>
   <div class="bottom-navbar">
     <div class="songInfo">
-      <img :src="cover" />
+      <img :src="`http://localhost:3910/api/album/image/${cover}`" />
       <div class="div">
         <h4>{{ getSongInfo() }}</h4>
         <h5>{{ artist }}</h5>
@@ -86,7 +86,8 @@ const audio = ref(null);
 const currentTime = ref(0);
 const duration = ref(0);
 const volume = ref(1);
-const cover = ref("default.jpg");
+const album = ref("");
+const cover = ref("default.png");
 const artist = ref("");
 
 const updateTime = () => {
@@ -95,7 +96,7 @@ const updateTime = () => {
 
 const loadedMetadata = () => {
   duration.value = audio.value.duration;
-  getAlbumcover();
+  getAlbum();
 };
 
 const getSongInfo = () => {
@@ -105,10 +106,9 @@ const getSongInfo = () => {
   return "";
 };
 
-const getAlbumcover = async () => {
+const getAlbum = async () => {
   if (props.song) {
     try {
-      console.log(props.song);
       const res = await axios.get(
         "http://localhost:3910/api/album/one/" + props.song.album,
         {
@@ -117,37 +117,13 @@ const getAlbumcover = async () => {
           },
         }
       );
-
-      const album = res.data.album;
+      album.value = res.data.album;
+      cover.value = album.value.image;
       artist.value = res.data.album.artist.name;
-      console.log(album.image);
-
-      const res2 = await axios.get(
-        "http://localhost:3910/api/album/image/" + album.image,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-          responseType: "arraybuffer",
-        }
-      );
-
-      const imageBase64 = btoa(
-        new Uint8Array(res2.data).reduce(
-          (data, byte) => data + String.fromCharCode(byte),
-          ""
-        )
-      );
-
-      cover.value = `data:${res2.headers[
-        "content-type"
-      ].toLowerCase()};base64,${imageBase64}`;
-      console.log(cover.value)
-    } catch {
-      return "";
+    } catch(err) {
+      console.log(err)
     }
   }
-  return "";
 };
 
 const togglePlay = () => {
@@ -264,7 +240,7 @@ onMounted(() => {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: #4caf50;
+  background: #a600ff;
   cursor: pointer;
 }
 
@@ -272,7 +248,7 @@ onMounted(() => {
   width: 15px;
   height: 15px;
   border-radius: 50%;
-  background: #4caf50;
+  background: #a600ff;
   cursor: pointer;
 }
 
@@ -322,14 +298,14 @@ onMounted(() => {
   appearance: none;
   width: 7px;
   height: 14px;
-  background: #4caf50;
+  background: #a600ff;
   cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
   width: 7px;
   height: 14px;
-  background: #4caf50;
+  background: #a600ff;
   cursor: pointer;
 }
 </style>
