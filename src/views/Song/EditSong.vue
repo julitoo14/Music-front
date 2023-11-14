@@ -2,34 +2,14 @@
   <div class="container">
     <h1>Edit Song</h1>
     <form @submit.prevent="submitForm">
-      <div class="form-group">
-        <label for="track">Track:</label>
+      <div class="form-group" v-for="field in fields" :key="field.id">
+        <label :for="field.id">{{ field.label }}</label>
         <input
-          type="text"
+          :type="field.type"
           class="form-control"
-          id="track"
-          v-model="track"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="duration">Duration:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="duration"
-          v-model="duration"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="name"
-          v-model="name"
-          required
+          :id="field.id"
+          v-model="field.model.value"
+          :required="field.required"
         />
       </div>
       <div class="form-group">
@@ -59,17 +39,34 @@
 </template>
 
 <script setup>
-import axios from "axios";
 import { onMounted, ref, reactive } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Alert from "../../components/Alert.vue";
+import {
+  getSong,
+  uploadSongFile,
+  updateSong,
+} from "../../composables/apiServices";
 
 const track = ref();
 const name = ref();
 const duration = ref();
 const route = useRoute();
+const router = useRouter();
 const file = ref();
 const albumId = ref();
+const songId = route.params.id;
+const fields = [
+  { id: "name", label: "Name:", model: name, type: "text", required: true },
+  { id: "track", label: "Track:", model: track, type: "text", required: true },
+  {
+    id: "duration",
+    label: "Duration:",
+    model: duration,
+    type: "text",
+    required: true,
+  },
+];
 const alert = reactive({
   show: false,
   message: "",
@@ -92,79 +89,38 @@ const showAlert = (message, type) => {
 };
 
 const fetchSong = async () => {
-  const response = await axios.get(
-    `http://localhost:3910/api/song/one/${route.params.id}`,
-    config
-  );
-  track.value = response.data.song.track;
-  name.value = response.data.song.name;
-  duration.value = response.data.song.duration;
-  albumId.value = response.data.song.album._id;
-};
-
-const upload = async () => {
-  if (file.value) {
-    const audioFormData = new FormData();
-    audioFormData.append("file0", file.value);
-
-    try {
-      await axios.put(
-        `http://localhost:3910/api/song/upload/${route.params.id}`,
-        audioFormData,
-        {
-          headers: {
-            Authorization: `${localStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-    } catch (err) {
-      showAlert(err.response.data.message, "danger");
-    }
-  }
+  const res = await getSong(songId);
+  track.value = res.song.track;
+  name.value = res.song.name;
+  duration.value = res.song.duration;
+  albumId.value = res.song.album._id;
 };
 
 const update = async () => {
-    if (file.value) {
-    const audioFormData = new FormData();
-    audioFormData.append("file0", file.value);
-
-    try {
-      await axios.put(
-        `http://localhost:3910/api/song/upload/${route.params.id}`,
-        audioFormData,
-        {
-          headers: {
-            Authorization: `${localStorage.getItem("token")}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-    } catch (err) {
-      showAlert(err.response.data.message, "danger");
-      return;
-    }
-  }
-
   const song = {
     track: track.value,
     name: name.value,
     duration: duration.value,
     album: albumId.value,
   };
-  try {
-    const response = await axios.put(
-      `http://localhost:3910/api/song/update/${route.params.id}`,
-      song,
-      config
-    );
+  try{
+    if (file.value) {
+      const audioFormData = new FormData();
+      audioFormData.append("file0", file.value);
+      await uploadSongFile(audioFormData, songId, config);
+    }
+
+    const res = await updateSong(song, songId, config);
     showAlert("Song updated successfully!", "info");
-  } catch (err) {
+    console.log(res);
+    router.push(`/album/${albumId.value}`);
+
+  }catch(err){
     showAlert(err.response.data.message, "danger");
   }
 };
 
-onMounted( () => {
+onMounted(() => {
   fetchSong();
   const token = localStorage.getItem("token");
   const decoded = JSON.parse(atob(token.split(".")[1]));

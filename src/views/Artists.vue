@@ -28,60 +28,37 @@
     </div>
 </template>
 
-<script>
-import { reactive, onMounted, ref } from "vue";
-import axios from "axios";
+<script setup>
+import { reactive, onMounted } from "vue";
+import { getArtists } from "../composables/apiServices";
 
-export default {
-  setup() {
-      const state = reactive({
-          artists: [],
-          page: 1,
-          imageUrl: ''
-      });
+const state = reactive({
+  artists: [],
+  page: 1,
+});
 
-
-      const config = {
-          headers: {
-              Authorization: `${localStorage.getItem("token")}`,
-          },
-      };
-
-      const imageUrl = ref('');
-
-      const fetchArtists = () => {
-          axios
-              .get(`http://localhost:3910/api/artist/list/${state.page}`, config)
-              .then((response) => {
-                  state.artists = response.data.artists;
-              })
-              .catch((error) => {
-                  console.log(error.response.data.message);
-              });
-      };
-
-      const nextPage = () => {
-          state.page++;
-          fetchArtists();
-      };
-
-      const previousPage = () => {
-          state.page--;
-          fetchArtists();
-      };
-
-      onMounted(() => {
-          fetchArtists();
-      });
-
-      return {
-          state,
-          nextPage,
-          previousPage,
-      };
-  },
+const fetchArtists = async () => {
+  try {
+    const res = await getArtists(state.page);
+    state.artists = res.artists;
+  } catch (error) {
+    console.log(error.response.data.message);
+  }
 };
+
+const nextPage = () => {
+  state.page++;
+  fetchArtists();
+};
+
+const previousPage = () => {
+  state.page--;
+  fetchArtists();
+};
+
+onMounted(fetchArtists);
 </script>
+
 
 <style scoped>
 

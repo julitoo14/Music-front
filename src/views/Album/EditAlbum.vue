@@ -1,32 +1,18 @@
 <template>
   <div class="container">
-    <h1 class="mt-5 text-center">Edit Artist</h1>
+    <h1 class="mt-5 text-center">Edit Album</h1>
     <form class="mt-5" @submit.prevent="submitForm">
-      <div class="form-group">
-        <label for="name">Title:</label>
+      <div class="form-group" v-for="field in fields" :key="field.id">
+        <label :for="field.id">{{ field.label }}</label>
         <input
-          type="text"
+          :type="field.type"
           class="form-control"
-          id="name"
-          v-model="album.title"
-          required
+          :id="field.id"
+          v-model="field.model.value"
+          :required="field.required"
         />
       </div>
       <div class="form-group">
-        <label for="description">Description:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="description"
-          v-model="album.description"
-        />
-        <label for="description">Year:</label>
-        <input
-          type="text"
-          class="form-control"
-          id="year"
-          v-model="album.year"
-        />
         <label for="file0" class="form-label">Image: </label>
         <input
           name="file0"
@@ -35,7 +21,7 @@
           @change="handleFileUpload"
         />
         <button
-          @click="update(album.title, album.description, album.year)"
+          @click="update(title, description, year)"
           type="submit"
           class="m-3 btn btn-primary"
         >
@@ -60,14 +46,23 @@
 
 <script setup>
 import { ref, onMounted, reactive } from "vue";
-import axios from "axios";
 import { useRouter, useRoute } from "vue-router";
 import Alert from "../../components/Alert.vue";
+import { uploadAlbumImage, updateAlbum, getAlbum } from "../../composables/apiServices";
 
-const album = ref("");
-const file0 = ref();
 const router = useRouter();
 const route = useRoute();
+const album = ref('');
+const title = ref("");
+const year = ref("");
+const description = ref("");
+const albumId = route.params.id;
+const file0 = ref();
+const fields = [
+      { id: 'name', label: 'Title:', model: title, type: 'text', required: true, },
+      { id: 'description', label: 'Description:', model: description, type: 'text', required: false },
+      { id: 'year', label: 'Year:', model: year, type: 'text', required: false },
+    ];
 const alert = reactive({
   show: false,
   message: "",
@@ -86,64 +81,41 @@ const handleFileUpload = (event) => {
 
 const upload = async () => {
   if (file0.value) {
-    console.log(file0.value);
-    let formData = new FormData();
-    formData.append("file0", file0.value);
-    const token = localStorage.getItem("token");
-    await axios
-      .put(
-        `http://localhost:3910/api/album/upload/${route.params.id}`,
-        formData,
-        {
-          headers: {
-            Authorization: `${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      )
-      .then((res) => {
-        showAlert("Image uploaded succesfully", "info");
-      })
-      .catch((err) => {
-        showAlert(err.response.data.message, "danger");
-      });
+    try{
+      let formData = new FormData();
+      formData.append("file0", file0.value);
+      await uploadAlbumImage(formData, albumId);
+    }catch(err){
+      showAlert(err.message, "danger");
+    }
   }
 };
 
 const update = async (title, description, year) => {
   upload();
-  const token = localStorage.getItem("token");
   try {
-    const res = await axios.put(
-      `http://localhost:3910/api/album/update/${route.params.id}`,
-      { title, description, year },
-      { headers: { Authorization: `${token}` } }
-    );
-    console.log(res.data);
-    showAlert("Album editado correctamente", "info");
-    setTimeout(() => {
-      router.push(`/album/${route.params.id}`);
-    }, 2000);
+    const updatedAlbum = {
+      title: title,
+      description: description,
+      year: year,
+    };
+    const res = await updateAlbum(updatedAlbum, albumId);
+    console.log(res);
+    router.push(`/album/${albumId}`);
   } catch (err) {
-    showAlert(err.response.data.message, "danger");
+    showAlert(err.message, "danger");
   }
 };
 
 const fetchAlbum = async () => {
-  const config = {
-    headers: {
-      Authorization: `${localStorage.getItem("token")}`,
-    },
-  };
   try {
-    const response = await axios.get(
-      `http://localhost:3910/api/album/one/${route.params.id}`,
-      config
-    );
-    album.value = response.data.album;
-    console.log(album.value);
+    const res = await getAlbum(albumId);
+    album.value = res.album;
+    title.value = album.value.title;
+    year.value = album.value.year;
+    description.value = album.value.description;
   } catch (error) {
-    console.error(error);
+    console.log(error.message);
   }
 };
 

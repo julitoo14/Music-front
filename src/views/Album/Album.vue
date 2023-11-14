@@ -102,23 +102,28 @@ const fetchSongs = async () => {
     const res = await getSongsByAlbum(albumId);
     songs.value = res.songs;
     //get songs files
-    songs.value.forEach(async (song) => {
-      files.value.push({
-        url: `http://localhost:3910/api/song/file/${
-          song.file
-        }?token=${localStorage.getItem("token")}`,
-        name: song.name,
-        track: song.track,
-        _id: song._id,
-        album: song.album,
-      });
-      if (files.value.length > 0) {
-        showTable.value = true;
-      }
-    });
+    getFilesFromSongs();
+    if (files.value.length > 0) {
+      showTable.value = true;
+    }
   } catch (err) {
     console.log(err.response.data.message);
   }
+};
+
+const getFilesFromSongs = () => {
+  songs.value.forEach(async (song) => {
+    files.value.push({
+      url: `http://localhost:3910/api/song/file/${
+        song.file
+      }?token=${localStorage.getItem("token")}`,
+      name: song.name,
+      track: song.track,
+      _id: song._id,
+      album: song.album,
+    });
+  });
+  
 };
 
 const removeAlbum = async () => {

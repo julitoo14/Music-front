@@ -44,6 +44,7 @@ const fetchSongs = async () =>{
         });
         playlistSongs.value = response.data.songs;
         playlistSongs.value.forEach(async song => {
+
           const res = await axios.get(`http://localhost:3910/api/song/one/${song}`,{
             headers: {
                 Authorization: `${localStorage.getItem("token")}`,
@@ -53,16 +54,7 @@ const fetchSongs = async () =>{
           song = res.data.song;
           console.log(song)
 
-          const res2 = await axios.get(`http://localhost:3910/api/song/file/${song.file}`,{
-            headers: {
-                Authorization: `${localStorage.getItem("token")}`,
-            },
-            responseType: "arraybuffer",
-          });
-
-          const blob = new Blob([res2.data], { type: res2.headers["content-type"] });
-
-          const fileUrl = URL.createObjectURL(blob);
+          const fileUrl = `http://localhost:3910/api/song/file/${song.file}?token=${localStorage.getItem("token")}`;
           songs.value.push(song);
           files.value.push({ url: fileUrl, name: song.name, track: song.track });
           if(files.value.length > 0){

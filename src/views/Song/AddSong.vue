@@ -2,34 +2,14 @@
   <div class="container">
     <h1 class="my-4">Add Song</h1>
     <form @submit.prevent="submitForm">
-      <div class="mb-3">
-        <label for="name" class="form-label">Name:</label>
+      <div class="form-group" v-for="field in fields" :key="field.id">
+        <label :for="field.id">{{ field.label }}</label>
         <input
-          type="text"
-          id="name"
-          v-model="name"
+          :type="field.type"
           class="form-control"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="track" class="form-label">Track:</label>
-        <input
-          type="text"
-          id="track"
-          v-model="track"
-          class="form-control"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="duration" class="form-label">Duration:</label>
-        <input
-          type="text"
-          id="duration"
-          v-model="duration"
-          class="form-control"
-          required
+          :id="field.id"
+          v-model="field.model.value"
+          :required="field.required"
         />
       </div>
       <div class="mb-3">
@@ -38,11 +18,12 @@
           name="file0"
           type="file"
           class="form-control"
+          required
           @change="onFileChange"
         />
       </div>
       <button
-        @click="saveSong(track, name, duration)"
+        @click="addSong()"
         type="submit"
         class="m-3 btn btn-primary"
       >
@@ -63,6 +44,7 @@ import { reactive, ref , onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 import Alert from "../../components/Alert.vue";
+import { saveSong, uploadSongFile } from "../../composables/apiServices";
 
 const route = useRoute();
 const router = useRouter();
@@ -70,6 +52,12 @@ const name = ref("");
 const track = ref("");
 const duration = ref("");
 const file = ref(null);
+const albumId = route.params.albumId;
+const fields = [
+      { id: 'name', label: 'Name:', model: name, type: 'text', required: true },
+      { id: 'track', label: 'Track:', model: track, type: 'text', required: true },
+      { id: 'duration', label: 'Duration:', model: duration, type: 'text', required: true },
+    ];
 
 const alert = reactive({
   show: false,
@@ -88,50 +76,27 @@ const onFileChange = (event) => {
 };
 
 // Fetch song data from API when component is mounted
-const saveSong = async () => {
-  const song = {
+const addSong = async () => {
+  try {
+    const song = {
     name: name.value,
     duration: duration.value,
     track: track.value,
-    album: route.params.albumId,
+    album: albumId,
   };
-
-  console.log(song);
-  try {
-    const response = await axios.post(
-      "http://localhost:3910/api/song/save",
-      song,
-      {
-        headers: {
-          Authorization: `${localStorage.getItem("token")}`,
-        },
-      }
-    );
-
-    const savedSong = response.data.savedSong;
-    console.log(savedSong);
+    const res = await saveSong(song);
+    const savedSong = res.savedSong;
     const id = savedSong._id;
-    console.log(savedSong._id);
 
     if (!file.value) {
-      showAlert("Song saved successfully!", "info");
+      showAlert(res.message, "info");
       return;
     }
     const audioFormData = new FormData();
     audioFormData.append("file0", file.value);
-
-    await axios.put(
-      `http://localhost:3910/api/song/upload/${id}`,
-      audioFormData,
-      {
-        headers: {
-          Authorization: `${localStorage.getItem("token")}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
-    showAlert("Song saved successfully!", "info");
+    await uploadSongFile(audioFormData, id);
+    console.log(res.message);
+    router.push(`/album/${albumId}`);
   } catch (error) {
     console.error(error);
     showAlert("Failed to save artist!");

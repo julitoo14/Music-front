@@ -28,7 +28,7 @@
       </div>
 
       <button
-        @click="login(email, password)"
+        @click="login()"
         class="mt-3 mb-5 btn btn-lg btn-light w-50 m-auto d-block"
       >
         Login
@@ -46,13 +46,15 @@
 <script setup>
 import { onMounted } from "vue";
 import { ref } from "vue";
-import axios from "axios";
 import Alert from "../components/Alert.vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
+import { loginUser } from "../composables/apiServices";
 const email = ref("");
 const password = ref("");
 const router = useRouter();
+const user = ref({});
+const token = ref("");
 const alert = reactive({
   show: false,
   message: "",
@@ -65,33 +67,25 @@ const showAlert = (message, type) => {
   alert.type = type;
 };
 
-const login = async (email, password) => {
-  const res = await axios
-    .post("http://localhost:3910/api/user/login/", {
-      email: email,
-      password: password,
-    })
-    .then((res) => {
-      showAlert(res.data.message, "info");
-      const token = res.data.token;
-      const id = res.data.user._id;
-      const nick = res.data.user.nick;
-      const image = res.data.user.image;
+const setLocalStorage = () => {
+  localStorage.setItem("token", token.value);
+  localStorage.setItem("nick", user.value.nick);
+  localStorage.setItem("id", user.value._id);
+  localStorage.setItem("image", user.value.image);
+}
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("nick", nick);
-      localStorage.setItem("id", id);
-      localStorage.setItem("image", image);
-      setTimeout(() => {
-        router.go();
-      }, 1000);
-    })
-    .catch((err) => {
-      //hacer un alert con el error
-      if (err) {
-        showAlert(err.response.data.message, "danger");
-      }
-    });
+const login = async () => {
+  try{
+    const res = await loginUser(email.value, password.value);
+    showAlert(res.message, "info");
+    console.log(res)
+    user.value = res.user;
+    token.value = res.token;
+    setLocalStorage();
+    router.go();
+  }catch(err){
+    showAlert(err.response.data.message);
+  }  
 };
 
 onMounted(() => {

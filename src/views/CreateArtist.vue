@@ -4,24 +4,15 @@
       <div class="col-md-6">
         <h1 class="text-center mb-4">Create Artist</h1>
         <form>
-          <div class="form-group">
-            <label for="name">Name</label>
+          <div class="form-group" v-for="field in fields" :key="field.id">
+            <label :for="field.id">{{ field.label }}</label>
             <input
-              type="text"
+              :type="field.type"
               class="form-control"
-              v-model="name"
-              id="name"
-              placeholder="Enter name"
+              :id="field.id"
+              v-model="field.model.value"
+              :required="field.required"
             />
-          </div>
-          <div class="form-group">
-            <label for="description">Description</label>
-            <textarea
-              class="form-control"
-              v-model="description"
-              id="description"
-              placeholder="Enter description"
-            ></textarea>
           </div>
           <div class="form-group">
             <div class="custom-file">
@@ -36,7 +27,7 @@
           <button
             type="button"
             class="btn btn-primary btn-block mt-4"
-            @click="saveArtist"
+            @click="addArtist"
           >
             Save
           </button>
@@ -53,15 +44,20 @@
 </template>
 
 <script setup>
-import axios from "axios";
+
 import { ref, reactive, onMounted } from "vue";
 import Alert from "../components/Alert.vue";
 import { useRouter } from "vue-router";
+import { saveArtist, uploadArtistImage } from "../composables/apiServices.js";
 
 const name = ref("");
 const description = ref("");
 const image = ref("default.png");
 const router = useRouter();
+const fields = [
+  { id: "name", label: "Name:", model: name, type: "text", required: true },
+  { id: "description", label: "Description:", model: description, type: "textarea", required: true },
+]
 let alert = reactive({
   show: false,
   message: "",
@@ -78,24 +74,15 @@ const onFileChange = (event) => {
   image.value = event.target.files[0];
 };
 
-const saveArtist = async () => {
+const addArtist = async () => {
   const artist = {
     name: name.value,
     description: description.value,
   };
 
   try {
-    const response = await axios.post(
-      "http://localhost:3910/api/artist/save",
-      artist,
-      {
-        headers: {
-          Authorization: `${localStorage.getItem("token")}`,
-        },
-      }
-    );
-
-    const savedArtist = response.data.artist;
+    const res = await saveArtist(artist);
+    const savedArtist = res.artist;
     const artistId = savedArtist._id;
 
     if (image.value == "default.png") {
@@ -104,25 +91,12 @@ const saveArtist = async () => {
     }
     const imageFormData = new FormData();
     imageFormData.append("file0", image.value);
-
-    await axios.post(
-      `http://localhost:3910/api/artist/upload/${artistId}`,
-      imageFormData,
-      {
-        headers: {
-          Authorization: `${localStorage.getItem("token")}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
+    await uploadArtistImage(imageFormData, artistId);
     showAlert("Artist saved successfully!", 'info');
-    setTimeout(() => {
-      router.push(`/artist/${artistId}`);
-    }, 2000);
+    router.push(`/artist/${artistId}`);
   } catch (error) {
     console.error(error);
-    showAlert("Failed to save artist!");
+    showAlert(error.message, 'danger');
   }
 };
 
