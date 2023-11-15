@@ -1,6 +1,7 @@
 <template>
   <div class="view" :style="{ flexDirection: logged ? 'block' : 'flex' }">
-    <Navbar />
+    <Navbar v-if="isMobile"></Navbar>
+    <Sidebar v-else></Sidebar>
     <RouterView
       class="main-view"
       @playSong="playSong"
@@ -38,15 +39,23 @@
 import { RouterView } from "vue-router";
 import { isPlaying } from "./composables/useAudioPlayer.js";
 import Navbar from "./components/Navbar.vue";
+import Sidebar from "./components/Sidebar.vue";
 import Mp3Player from "./components/Mp3Player.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watchEffect } from "vue";
 const logged = ref(false);
 const file = ref("");
 const playlist = ref([]);
 const currentIndex = ref(0);
 const songInfo = ref(null);
 
-onMounted(async () => {
+const isMobile = ref(window.innerWidth < 768);
+
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', updateIsMobile);
   if (localStorage.getItem("token")) {
     logged.value = true;
   } else {
