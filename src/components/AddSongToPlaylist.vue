@@ -61,8 +61,8 @@
   
   <script setup>
   import { ref, onMounted, reactive } from "vue";
-  import axios from "axios";
   import Alert from "./Alert.vue";
+  import { getPlaylistsByUser, addSongToAPlaylist } from "../composables/apiServices";
   const props = defineProps({
     show: false,
   });
@@ -86,25 +86,12 @@
   
   const addSongToPlaylist = async () => {
     const songId = localStorage.getItem("songId");
-    console.log(selectedPlaylist.value)
-    const config = {
-      headers: {
-        Authorization: `${localStorage.getItem("token")}`,
-      },
-    };
     try {
-        const response = await axios.post(
-            `http://localhost:3910/api/playlist/addSong/`,
-            {
-            playlistId: selectedPlaylist.value,
-            song: songId,
-            },
-            config
-        );
-        showAlert("info", response.data.message);
+        const response = await addSongToAPlaylist(selectedPlaylist.value, songId)
+        showAlert("info", response.message);
         } catch (err) {
         if(selectedPlaylist.value){
-            showAlert("danger", err.response.data.message);
+            showAlert("danger", err);
         } else {
             showAlert("danger", "You must select a playlist");
         }
@@ -116,24 +103,14 @@
   };
 
   const getPlaylists = async () => {
-  const token = localStorage.getItem("token");
   const id = localStorage.getItem("id");
   try {
-    const res = await axios.get(
-      `http://localhost:3910/api/playlist/list/${id}`,
-      {
-        headers: {
-          Authorization: `${token}`,
-        },
-      }
-    );
-    playlists.value = res.data.playlists;
+    const res = await getPlaylistsByUser(id)
+    playlists.value = res.playlists;
     if (playlists.value.length == 0) {
       showError.value = true;
     }
-    
-    console.log(res.data.playlists);
-    console.log(playlists.value.length)
+
   } catch (err) {
     showAlert(err.response.data.message, "danger");
   }

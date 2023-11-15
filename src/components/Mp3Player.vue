@@ -66,7 +66,8 @@ import PlayIconVue from "../assets/icons/PlayIcon.vue";
 import PauseIconVue from "../assets/icons/PauseIcon.vue";
 import NextIcon from "../assets/icons/NextIcon.vue";
 import PreviousIcon from "../assets/icons/PreviousIcon.vue";
-import axios from "axios";
+import { getAlbum } from "../composables/apiServices";
+
 
 
 const props = defineProps({
@@ -82,7 +83,6 @@ const props = defineProps({
 const emit = defineEmits(["ended", "next", "previous"]);
 
 const audio = ref(null);
-
 const currentTime = ref(0);
 const duration = ref(0);
 const volume = ref(1);
@@ -96,7 +96,7 @@ const updateTime = () => {
 
 const loadedMetadata = () => {
   duration.value = audio.value.duration;
-  getAlbum();
+  fetchAlbum();
 };
 
 const getSongInfo = () => {
@@ -106,19 +106,11 @@ const getSongInfo = () => {
   return "";
 };
 
-const getAlbum = async () => {
-  console.log(props.song)
+const fetchAlbum = async () => {
   if (props.song) {
     try {
-      const res = await axios.get(
-        "http://localhost:3910/api/album/one/" + props.song.album._id,
-        {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        }
-      );
-      album.value = res.data.album;
+      const res = await getAlbum(props.song.album._id)
+      album.value = res.album;
       cover.value = album.value.image;
       artist.value = res.data.album.artist.name;
     } catch(err) {

@@ -116,7 +116,6 @@ import ArtistIcon from "../assets/icons/ArtistIcon.vue";
 import ProfileIcon from "../assets/icons/ProfileIcon.vue";
 import LoginIcon from "../assets/icons/LoginIcon.vue";
 import Add from "../assets/icons/Add.vue";
-import axios from "axios";
 
 const admin = ref(false);
 const logged = ref("");

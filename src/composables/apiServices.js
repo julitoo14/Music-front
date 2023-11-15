@@ -125,6 +125,11 @@ export async function loginUser(email, password){
     return response.data;
 }
 
+export async function addSongToAPlaylist(playlistId, song) {
+    const response = await axios.post(`http://localhost:3910/api/playlist/addSong/`, {playlistId: playlistId, song: song}, config);
+    return response.data; 
+}
+
 // ----------------- PUT -----------------
 export async function uploadAlbumImage(image, id) {
     const response = await axios.put(`http://localhost:3910/api/album/upload/${id}`, image, {
