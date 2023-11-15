@@ -61,8 +61,8 @@
 
 <script setup>
 import { ref, onMounted, reactive } from "vue";
-import axios from "axios";
 import Alert from "./Alert.vue";
+import { savePlaylist } from "../composables/apiServices";
 const props = defineProps({
   show: false,
 });
@@ -86,25 +86,13 @@ const showAlert = (type, message) => {
 };
 
 const addPlaylist = async () => {
-  const config = {
-    headers: {
-      Authorization: `${localStorage.getItem("token")}`,
-    },
-  };
   try {
-    const response = await axios.post(
-      `http://localhost:3910/api/playlist/save/`,
-      {
-        name: name.value,
-        user: Userid,
-      },
-      config
-    );
+    await savePlaylist(name.value, Userid)
     showAlert("success", "Playlist Added Successfully");
     close();
     emit("update");
   } catch (err) {
-    showAlert("danger", err.response.data.message);
+    console.log(err.response.data.message);
   }
 };
 
@@ -123,10 +111,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.modal-backdrop {
-  opacity: 0.5 !important;
-}
-
 .modal {
   display: block !important;
   background-color: rgba(100, 98, 98, 0.5);
@@ -168,12 +152,4 @@ onMounted(() => {
   border-top: 1px solid #ccc;
 }
 
-.modal-button {
-  border: none;
-  background-color: #007bff;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
 </style>

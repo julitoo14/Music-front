@@ -67,7 +67,7 @@ import PauseIconVue from "../assets/icons/PauseIcon.vue";
 import NextIcon from "../assets/icons/NextIcon.vue";
 import PreviousIcon from "../assets/icons/PreviousIcon.vue";
 import axios from "axios";
-import ArtistIcon from "../assets/icons/ArtistIcon.vue";
+
 
 const props = defineProps({
   files: {
@@ -107,10 +107,11 @@ const getSongInfo = () => {
 };
 
 const getAlbum = async () => {
+  console.log(props.song)
   if (props.song) {
     try {
       const res = await axios.get(
-        "http://localhost:3910/api/album/one/" + props.song.album,
+        "http://localhost:3910/api/album/one/" + props.song.album._id,
         {
           headers: {
             Authorization: localStorage.getItem("token"),

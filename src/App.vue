@@ -1,20 +1,26 @@
 <template>
   <div class="view" :style="{ flexDirection: logged ? 'block' : 'flex' }">
     <Navbar />
-    <RouterView class="main-view"
+    <RouterView
+      class="main-view"
       @playSong="playSong"
       style="position: relative; overflow-y: auto; width: 100%"
     ></RouterView>
-    <Mp3Player :song="songInfo" :files="file" @previous="playPreviousSong" @next="playNextSong" @ended="playNextSong" ></Mp3Player>
+    <Mp3Player
+      :song="songInfo"
+      :files="file"
+      @previous="playPreviousSong"
+      @next="playNextSong"
+      @ended="playNextSong"
+    ></Mp3Player>
   </div>
 </template>
 
 <style scoped>
-
-.main-view{
+.main-view {
   padding-bottom: 5%;
 }
-  
+
 .view {
   background: linear-gradient(
     180deg,
@@ -37,7 +43,7 @@ import { ref, onMounted } from "vue";
 const logged = ref(false);
 const file = ref("");
 const playlist = ref([]);
-const currentTrack = ref(0);
+const currentIndex = ref(0);
 const songInfo = ref(null);
 
 onMounted(async () => {
@@ -48,40 +54,54 @@ onMounted(async () => {
   }
 });
 
-const playSong = async (track, files) => {
+const playSong = async (id, files) => {
   playlist.value = files;
-  currentTrack.value = track;
   isPlaying.value = true;
-  // Search for song in playlist based on track
-  const song = playlist.value.find((song ) => song.track === currentTrack.value);  
-  file.value = song.url;
-  songInfo.value = song;
+
+  // Search for song in playlist based on id and get its index
+  const songIndex = playlist.value.findIndex((song) => song._id === id);
+  if (songIndex !== -1) {
+    currentIndex.value = songIndex;
+    const song = playlist.value[songIndex];
+    file.value = song.file;
+    songInfo.value = song;
+  }
+};
+
+const isLastSong = () => {
+  if (currentIndex.value === playlist.value.length - 1) {
+    currentIndex.value = 0;
+    const song = playlist.value[currentIndex.value];
+    file.value = song.file;
+    songInfo.value = song;
+    return true;
+  }
+};
+
+const isFirstSong = () => {
+  if (currentIndex.value === 0) {
+    currentIndex.value = playlist.value.length - 1;
+    const song = playlist.value[currentIndex.value];
+    file.value = song.file;
+    songInfo.value = song;
+    return true;
+  }
 };
 
 const playNextSong = () => {
-  if (currentTrack.value === playlist.value.length) {
-    currentTrack.value = 0;
-    file.value = "";
-    return;
-  }
-  currentTrack.value = currentTrack.value + 1;
-  const song = playlist.value.find((song) => song.track === currentTrack.value);
-  file.value = song.url;
+  isPlaying.value = true;
+  if (isLastSong()) {return;}
+  currentIndex.value = currentIndex.value + 1;
+  const song = playlist.value[currentIndex.value];
+  file.value = song.file;
   songInfo.value = song;
 };
 
 const playPreviousSong = () => {
-  if (currentTrack.value === 1) {
-    currentTrack.value = playlist.value.length;
-    file.value = "";
-    songInfo.value = song;
-    return;
-  }
-  currentTrack.value = currentTrack.value - 1;
-  const song = playlist.value.find((song) => song.track === currentTrack.value);
-  file.value = song.url;
+  if (isFirstSong()) {return;}
+  currentIndex.value = currentIndex.value - 1;
+  const song = playlist.value[currentIndex.value];
+  file.value = song.file;
   songInfo.value = song;
 };
-
-
 </script>

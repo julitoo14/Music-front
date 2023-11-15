@@ -5,7 +5,7 @@
       <div class="mb-3">
         <label for="name" class="form-label">Name</label>
         <input
-          v-model="name"
+          v-model="form.name"
           required
           type="name"
           class="form-control bg-dark text-light"
@@ -17,7 +17,7 @@
       <div class="mb-3">
         <label for="surname" class="form-label">Surname</label>
         <input
-          v-model="surname"
+          v-model="form.surname"
           required
           type="surname"
           class="form-control bg-dark text-light"
@@ -28,7 +28,7 @@
       <div class="mb-3">
         <label for="nick" class="form-label">Nickname</label>
         <input
-          v-model="nick"
+          v-model="form.nick"
           required
           type="text"
           name="nick"
@@ -40,7 +40,7 @@
       <div class="mb-3">
         <label for="email" class="form-label">Email</label>
         <input
-          v-model="email"
+          v-model="form.email"
           required
           type="email"
           name="email"
@@ -52,7 +52,7 @@
       <div class="mb-3">
         <label for="password" class="form-label">Password</label>
         <input
-          v-model="password"
+          v-model="form.password"
           required
           type="password"
           class="form-control bg-dark text-light"
@@ -63,7 +63,7 @@
       <div class="mb-3">
         <label for="confirmPassword" class="form-label">Confirm Password</label>
         <input
-          v-model="confirmPassword"
+          v-model="form.confirmPassword"
           required
           type="password"
           class="form-control bg-dark text-light"
@@ -72,7 +72,7 @@
         />
       </div>
       <button
-        @click="register(name, surname, nick, email, password, confirmPassword)"
+        @click="register()"
         class="mt-3 mb-5 btn btn-lg btn-light w-50 m-auto d-block"
       >
         Register
@@ -88,18 +88,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import {onMounted, reactive } from "vue";
 import Alert from "../components/Alert.vue";
-import { reactive } from "vue";
 import { useRouter } from "vue-router";
-const name = ref("");
-const surname = ref("");
-const nick = ref("");
-const email = ref("");
-const password = ref("");
-const confirmPassword = ref("");
+import { saveUser } from "../composables/apiServices";
+
 const router = useRouter();
+
+const form = reactive({
+  name: "",
+  surname: "",
+  nick: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+});
+
 const alert = reactive({
   show: false,
   message: "",
@@ -112,47 +116,32 @@ const showAlert = (message, type) => {
   alert.type = type;
 };
 
-const register = async (
-  name,
-  surname,
-  nick,
-  email,
-  password,
-  confirmPassword
-) => {
-  if (
-    name != "" &&
-    surname != "" &&
-    nick != "" &&
-    email != "" &&
-    password != "" &&
-    confirmPassword != ""
-  ) {
-    if (password != confirmPassword) {
-      showAlert("Passwords do not match", "danger");
+const validateForm = () => {
+  for (let field in form) {
+    if (!form[field]) {
+      showAlert(`Please fill in the ${field}`, "danger");
       return false;
     }
+  }
+  if (form.password !== form.confirmPassword) {
+    showAlert("Passwords do not match", "danger");
+    return false;
+  }
+  return true;
+};
 
-    const res = await axios
-      .post("http://localhost:3910/api/user/register/", {
-        name: name,
-        nick: nick.toLowerCase(),
-        password: password,
-        email: email.toLowerCase(),
-        surname: surname,
-      })
-      .then((res) => {
-        showAlert(res.data.message, "info");
-        setTimeout(() => {
-          router.push("/login");
-        }, 5000);
-      })
-      .catch((err) => {
-        //hacer un alert con el error
-        if (err) {
-          showAlert(err.response.data.message, "danger");
-        }
-      });
+const register = async () => {
+  if (!validateForm()) return;
+
+  try {
+    const res = await saveUser(form);
+    showAlert(res.message, "info");
+    console.log(res);
+    setTimeout(() => {
+      router.push("/login");
+    }, 5000);
+  } catch (err) {
+    showAlert(err.message, "danger");
   }
 };
 
@@ -162,6 +151,7 @@ onMounted(() => {
   }
 });
 </script>
+
 
 <style scoped>
 form {

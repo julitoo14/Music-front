@@ -35,9 +35,19 @@ export async function getSong(id) {
     return response.data;
 }
 
+export async function getSongsByPlaylist(playlistId) {
+    const response = await axios.get(`http://localhost:3910/api/playlist/songlist/${playlistId}`,config);
+    return response.data;
+}
+
 
 export async function getPlaylists() {
     const response = await axios.get(`http://localhost:3910/api/playlist/list`,config);
+    return response.data;
+}
+
+export async function getPlaylistsByUser(id) {
+    const response = await axios.get(`http://localhost:3910/api/playlist/list/${id}`,config);
     return response.data;
 }
 
@@ -74,6 +84,16 @@ export async function deleteSong(id) {
     return response.data; 
 }
 
+export async function removeSongFromPlaylist(songId, playlistId) {
+    const response = await axios.delete(`http://localhost:3910/api/playlist/removeSong/${songId}`, config);
+    return response.data; 
+}
+
+export async function deletePlaylist(id) {
+    const response = await axios.delete(`http://localhost:3910/api/playlist/remove/${id}`, config);
+    return response.data; 
+}
+
 // ----------------- POST -----------------
 export async function saveAlbum(album) {
     const response = await axios.post(`http://localhost:3910/api/album/save`, album, config);
@@ -86,6 +106,17 @@ export async function saveSong(song) {
 }
 export async function saveArtist(artist) {
     const response = await axios.post(`http://localhost:3910/api/artist/save`, artist, config);
+    return response.data; 
+}
+
+export async function saveUser(user) {
+    const response = await axios.post(`http://localhost:3910/api/user/register`, user, config);
+    return response.data; 
+
+}
+
+export async function savePlaylist(name, user) {
+    const response = await axios.post(`http://localhost:3910/api/playlist/save`,{name: name, user: user}, config);
     return response.data; 
 }
 

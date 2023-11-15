@@ -38,7 +38,7 @@
           </tr>
         </thead>
         <Song
-          @playSong="$emit('playSong', song.track, files)"
+          @playSong="$emit('playSong', song._id, songs)"
           @removeSong="removeSong(song._id)"
           @addSong="showAdd()"
           v-for="song in songs"
@@ -68,6 +68,7 @@ import {
   getSongsByAlbum,
   deleteAlbum,
   deleteSong,
+  getSong,
 } from "../../composables/apiServices";
 
 const route = useRoute();
@@ -75,7 +76,6 @@ const album = ref("");
 const artist = ref("");
 const albumImage = ref("");
 const songs = ref([]);
-const files = ref([]);
 const showTable = ref(false);
 const admin = ref(false);
 const showAddPlaylistModal = ref(false);
@@ -103,7 +103,7 @@ const fetchSongs = async () => {
     songs.value = res.songs;
     //get songs files
     getFilesFromSongs();
-    if (files.value.length > 0) {
+    if (songs.value.length > 0) {
       showTable.value = true;
     }
   } catch (err) {
@@ -111,19 +111,16 @@ const fetchSongs = async () => {
   }
 };
 
-const getFilesFromSongs = () => {
-  songs.value.forEach(async (song) => {
-    files.value.push({
-      url: `http://localhost:3910/api/song/file/${
-        song.file
-      }?token=${localStorage.getItem("token")}`,
-      name: song.name,
-      track: song.track,
-      _id: song._id,
-      album: song.album,
-    });
+const getFilesFromSongs = async () => {
+  const promises = songs.value.map(async (song) => {
+    const res = await getSong(song._id);
+    song = res.song;
+    song.file = `http://localhost:3910/api/song/file/${song.file}?token=${localStorage.getItem(
+      "token"
+    )}`;
+    return song;
   });
-  
+  songs.value = await Promise.all(promises);
 };
 
 const removeAlbum = async () => {
