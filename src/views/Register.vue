@@ -170,7 +170,6 @@ form {
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    margin-bottom: 6em;
-    height: 100vh;
+    padding-top: 2em;
 }
 </style>

@@ -211,6 +211,7 @@ th {
 @media (max-width: 768px) {
   .albumView {
     margin-top: 4em; /* Ajusta este valor según el tamaño de tu navbar */
+    margin-bottom: 4em;
   }
 
   .album-cover {

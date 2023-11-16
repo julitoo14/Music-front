@@ -1,5 +1,8 @@
 <template>
   <div class="container-fluid">
+
+    <h2></h2>
+
     <table v-if="showTable" class="table table-hover">
       <thead>
         <tr>
@@ -22,6 +25,19 @@
   </div>
 </template>
 
+<style scoped>
+  .table{
+    width: 100%;
+    margin-bottom: 5em;
+  }
+
+  @media screen and (max-width: 1000px) {
+    .table{
+      margin-top: 5em;
+    }
+  }
+</style>
+
 <script setup>
 import Song from "../components/Song.vue";
 import { onMounted, ref } from "vue";
@@ -32,6 +48,8 @@ const playlistSongs = ref([]);
 const route = useRoute();
 const showTable = ref(true);
 const playlistId = route.params.id;
+
+
 
 const fetchSongs = async () => {
   songs.value = [];

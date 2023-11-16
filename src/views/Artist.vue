@@ -19,7 +19,7 @@
             >Edit Artist</RouterLink
             >
           </button>
-          <button class="btn-danger btn" @click="removeArtist()">
+          <button class="btn-danger btn" @click="showDeleteModal = true">
             Remove Artist
           </button>
         </div>
@@ -34,6 +34,12 @@
         :albumImage="`http://localhost:3910/api/album/image/${album.image}`"
       />
     </div>
+    <DeleteModal
+    v-if="showDeleteModal"
+    @close="showDeleteModal = false"
+    :show="showDeleteModal"
+    @delete="removeArtist(artistId), showDeleteModal = false"
+    ></DeleteModal>
   </div>
 </template>
 
@@ -42,6 +48,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Album from "../components/Album.vue";
 import { deleteArtist, getArtist, getAlbumsByArtist } from "../composables/apiServices";
+import DeleteModal from "../components/DeleteModal.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -50,6 +57,8 @@ const artistId = route.params.id;
 const artist = ref({});
 const image = ref("");
 const albums = ref([]);
+const showDeleteModal = ref(false);
+
 
 const removeArtist = async () => {
   try {
@@ -97,14 +106,13 @@ onMounted(() => {
 
 <style scoped>
 .artist-container {
-  height: 100%;
+  height: 90vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  margin-bottom: 10vh;
 }
 
 .albums {
@@ -144,7 +152,7 @@ onMounted(() => {
 
 .albums-container {
   margin-top: 20px;
-  margin-bottom: 70px;
+  margin-bottom: 4em;
   width: 100%;
   display: flex;
 }
@@ -168,7 +176,8 @@ p {
 @media (max-width: 768px) {
   .artist-container {
     padding: 10px;
-    margin-bottom: 10%;
+    margin-bottom: 5em;
+    padding-top: 5em;
   }
 
   .artist-info {
@@ -187,8 +196,7 @@ p {
   }
 
   .albums-container {
-    margin-top: 10px;
-    margin-bottom: 50px;
+    margin-top: 20px;
   }
 
   h1 {

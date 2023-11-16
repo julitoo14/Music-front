@@ -115,7 +115,7 @@ onMounted(fetchArtists);
 }
 @media screen and (max-width: 1000px) {
   .page{
-    margin-bottom: 15%;
+    margin-bottom: 35%;
     margin-top: 5%;
   }
   

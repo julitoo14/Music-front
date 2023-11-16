@@ -27,7 +27,7 @@
             <td>{{ playlist.songs.length }}</td>
             <td><div class="btn-group">
               <button class="btn btn-primary"><RouterLink class="nav-link" :to="`/playlist/${playlist._id}`">Visit</RouterLink></button>
-              <button @click="removePlaylist(playlist._id)" class="btn btn-danger">Remove</button>
+              <button @click="showDeleteModal = true, playlistToDelete = playlist._id" class="btn btn-danger">Remove</button>
             </div>
             </td>
           </tr>
@@ -39,7 +39,14 @@
       @close="showPlaylistModal = false"
       :show="showPlaylistModal"
       @update="fetchPlaylists()"
+      class="add-playlist-modal"
     />
+    <DeleteModal
+    v-if="showDeleteModal"
+    @close="showDeleteModal = false"
+    :show="showDeleteModal"
+    @delete="removePlaylist(playlistToDelete), showDeleteModal = false"
+    ></DeleteModal>
   </div>
 </template>
 
@@ -48,11 +55,14 @@ import { onMounted, ref, reactive } from "vue";
 import { useRoute} from "vue-router";
 import AddPlaylist from "../components/AddPlaylist.vue";
 import { deletePlaylist, getPlaylistsByUser, getUserProfile } from "../composables/apiServices";
+import DeleteModal from "../components/DeleteModal.vue";
 const route = useRoute();
 const id = route.params.id;
 const user = ref({});
 const avatarUrl = ref("");
 const showPlaylistModal =ref('');
+const showDeleteModal = ref(false);
+const playlistToDelete = ref("");
 const showTable = ref(false);
 const playlists = ref([]);
 const alert = reactive({
@@ -163,4 +173,31 @@ button {
 .info {
   width: 75%;
 }
+
+@media (max-width: 768px) {
+  .avatar{
+    width: 8em;
+    height: 8em;
+  }
+
+  .top h1 {
+    font-size: 3em;
+  }
+
+  .top h3{
+    font-size: 1em;
+  }
+}
+
+@media (max-width: 1000px) {
+  .top{
+    margin-top: 4em;
+  }
+
+  .add-playlist-modal{
+    margin-top: 4em;
+  }
+
+}
+  
 </style>
