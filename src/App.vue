@@ -19,7 +19,7 @@
 
 <style scoped>
 .main-view {
-  margin-bottom: 5%;
+  height: 90vh;
 }
 
 .view {
@@ -30,15 +30,10 @@
     rgba(54, 55, 55, 1) 86%
   );
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
 }
 
-@media (max-width: 768px) {
-  .view{
-    margin-bottom: 4em;
-  }
-}
 
 
 </style>
@@ -56,10 +51,10 @@ const playlist = ref([]);
 const currentIndex = ref(0);
 const songInfo = ref(null);
 
-const isMobile = ref(window.innerWidth < 768);
+const isMobile = ref(window.innerWidth < 1000);
 
 const updateIsMobile = () => {
-  isMobile.value = window.innerWidth < 768;
+  isMobile.value = window.innerWidth < 1000;
 };
 
 onMounted(() => {

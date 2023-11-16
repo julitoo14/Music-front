@@ -113,7 +113,19 @@ form {
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    margin-bottom: 6em;
-    height: 100vh;
 }
+
+@media screen and (max-width: 1000px) {
+  form {
+    width: 70%;
+    margin: auto;
+  }
+
+  .page{
+    padding-top:5em;
+  }
+}
+
+
+
 </style>

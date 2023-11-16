@@ -157,12 +157,8 @@ watch(logged, (newVal) => {
 h2 {
   font-size: 1.5em;
 }
-.dropdown-menu hr {
-  background-color: rgb(100, 99, 99);
-}
 
 .dropdown {
-  bottom: 0;
   width: 50%;
 }
 .nav-link:hover {
@@ -177,11 +173,12 @@ h2 {
 .sidebar {
   width: 20%;
   background-color: rgb(26, 27, 27);
-  height: 90%;
+  height: 90vh;
   position: relative;
 }
 
 .link p {
   font-size: 1.6em;
 }
+  
 </style>

@@ -66,8 +66,7 @@ onMounted(fetchArtists);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  margin-bottom: 5em;
-  height: 100vh;
+  margin-bottom: 5%;
 }
 
 .card {
@@ -114,8 +113,11 @@ onMounted(fetchArtists);
   background-color: #343a40;
   border-color: #343a40;
 }
-
-.mt-auto {
-  margin-top: auto;
+@media screen and (max-width: 1000px) {
+  .page{
+    margin-bottom: 15%;
+    margin-top: 5%;
+  }
+  
 }
 </style>

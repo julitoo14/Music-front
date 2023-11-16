@@ -184,8 +184,7 @@ th {
 }
 
 .albumView {
-  height: 100%;
-  margin-bottom: 2em;
+  height: 100vh;
 }
 .button {
   background-color: transparent;
@@ -205,15 +204,13 @@ th {
 }
 
 .table {
-  overflow-y: auto;
-  margin-bottom: 7em;
+  overflow-y: scroll;
+  margin-bottom: 6em;
 }
 
 @media (max-width: 768px) {
   .albumView {
     margin-top: 4em; /* Ajusta este valor según el tamaño de tu navbar */
-    margin-bottom: 4em; /* Ajusta este valor según el tamaño de tu reproductor de música */
-    height: 90%;
   }
 
   .album-cover {
@@ -226,10 +223,10 @@ th {
   }
 
   .table{
-    width: 95%;
+    width: 100%;
     margin: auto;
-    margin-bottom: 6em;
     margin-top: 0.3em;
+    margin-bottom: 5em;
   }
 }
 </style>
