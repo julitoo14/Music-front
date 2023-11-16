@@ -2,11 +2,11 @@
   <div class="artist-container" >
     <div class="artist-info row" >
       <div class="name-img row">
-        <img class="artist-image col-12" :src="image">
+        <img class="artist-image col-sm-12  " :src="image">
         <h1 class="col-12">{{ artist.name }}</h1>
       </div>
       <div>
-        <p>{{ artist.description }}</p>
+        <p style="overflow-y: auto">{{ artist.description }}</p>
 
         <div v-if="admin">
           <button class="btn-success btn">
@@ -104,6 +104,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
+  margin-bottom: 10vh;
 }
 
 .albums {
@@ -130,6 +131,7 @@ onMounted(() => {
   object-fit: cover;
   border-radius: 10px;
   margin-right: 20px;
+  margin: auto;
 }
 
 .name-img{
@@ -162,41 +164,43 @@ p {
   margin-bottom: 20px;
 }
 
-@media (max-width: 600px) {
+
+@media (max-width: 768px) {
   .artist-container {
-    flex-direction: column;
+    padding: 10px;
+    margin-bottom: 10%;
   }
 
   .artist-info {
     flex-direction: column;
-    align-items: center;
+    text-align: center;
   }
 
   .name-img {
-    flex-direction: column;
-    align-items: center;
+    margin-right: 0;
+    margin-bottom: 20px;
   }
 
   .artist-image {
-    width: 80%;
-    height: auto;
-  }
-}
-
-@media (min-width: 601px) {
-  .artist-container {
-    flex-direction: column;
+    width: 200px;
+    height: 200px;
   }
 
-  .artist-info {
-    flex-direction: column;
-    align-items: flex-start;
+  .albums-container {
+    margin-top: 10px;
+    margin-bottom: 50px;
   }
 
-  .name-img {
-    flex-direction: row;
-    align-items: flex-start;
+  h1 {
+    font-size: 2rem;
   }
 
+  h2 {
+    font-size: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="bottom-navbar">
     <div class="songInfo">
       <img :src="`http://localhost:3910/api/album/image/${cover}`" />
-      <div class="div">
+      <div  class="div">
         <h4>{{ getSongInfo() }}</h4>
         <h5>{{ artist }}</h5>
       </div>
@@ -38,7 +38,8 @@
         {{ formatTime(duration) }}
       </div>
     </div>
-    <div class="volume">
+    
+    <div class="volume" v-if="!isMobile">
       <input
         type="range"
         class="volume-slider"
@@ -47,6 +48,9 @@
         step="0.01"
         v-model="volume"
       />
+    </div>
+    <div class="mobileInfo" v-if="isMobile">
+      
     </div>
     <audio
       ref="audio"
@@ -90,6 +94,13 @@ const album = ref("");
 const cover = ref("default.png");
 const artist = ref("");
 
+const isMobile = ref(window.innerWidth < 768);
+
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth < 768;
+};
+
+
 const updateTime = () => {
   currentTime.value = audio.value.currentTime;
 };
@@ -112,7 +123,7 @@ const fetchAlbum = async () => {
       const res = await getAlbum(props.song.album._id)
       album.value = res.album;
       cover.value = album.value.image;
-      artist.value = res.data.album.artist.name;
+      artist.value = res.album.artist.name;
     } catch(err) {
       console.log(err)
     }
@@ -172,6 +183,7 @@ watch(volume, (newVolume) => {
 });
 
 onMounted(() => {
+  window.addEventListener('resize', updateIsMobile);
   if (props.files) {
     isPlaying.value = true;
   }
@@ -204,8 +216,10 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0;
   flex-direction: row;
+  padding: 0.4em; 
+  margin-top: 10%;
 }
 
 .play-pause {
@@ -301,4 +315,42 @@ onMounted(() => {
   background: #a600ff;
   cursor: pointer;
 }
+
+@media (max-width: 768px) {
+  .bottom-navbar {
+    height: 15%;
+    display: flex;
+    flex-direction: column;
+
+  }
+
+  .songInfo, .controls {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .songInfo{
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .songInfo img {
+    width: 60px;
+  }
+
+  .play-pause {
+    width: 40px;
+    height: 40px;
+  }
+
+  .volume-slider, .slider {
+    width: 80%;
+  }
+
+  .controls{
+    width: 100%;
+  }
+}
+
 </style>

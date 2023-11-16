@@ -3,27 +3,26 @@
     <tr class="song" @click="$emit('playSong')">
       <th v-if="props.track">{{ song.track }}</th>
       <td style="font-size: 1.5em; text-align:left">{{ song.name }}</td>
-      <td style="font-size: 1.1em; text-align:left">{{ song.duration }}</td>
+      <td v-if="!isMobile" style="font-size: 1.1em; text-align:left">{{ song.duration }}</td>
       <td>
         <div class="btn-group" v-if="playlistview ">
-          <button class="btn btn-success" @click="$emit('playSong')">play</button>
+          <button v-if="isMobile" class="btn btn-success" @click="$emit('playSong')">play</button>
           <button class="btn btn-danger" @click="$emit('removeSong')">Delete</button>
         </div>
         <div v-else-if="admin" class="btn-group">
-          <button class="btn btn-success" @click="$emit('playSong')">play</button>
-        <button class="btn btn-primary" @click="$emit('addSong',selectSong())">+</button>
-        <button class="btn btn-info">
+          <button v-if="!isMobile" class="btn btn-success" @click="$emit('playSong')">play</button>
+        <AddIcon  @click="$emit('addSong',selectSong())" /> 
           <RouterLink class="nav-link" :to="`/editSong/${song._id}`"
-            >Edit</RouterLink
+            > <Pencil></Pencil> </RouterLink
           >
-        </button>
-        <button class="btn btn-danger" @click="$emit('removeSong')">
+        
+        <Delete  @click="$emit('removeSong')">
           Delete
-        </button>
+        </Delete>
       </div>
       <div v-else class="btn-group">
-        <button class="btn btn-success" @click="$emit('playSong')">play</button>
-        <button class="btn btn-primary" @click="$emit('addSong', selectSong())">+</button>
+        <button v-if="!isMobile" class="btn btn-success" @click="$emit('playSong')">play</button>
+        <AddIcon @click="$emit('addSong', selectSong())">+</AddIcon>
       </div>
       </td>
     </tr>
@@ -61,6 +60,9 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
+import AddIcon from "../assets/icons/AddIcon.vue";
+import Pencil from "../assets/icons/Pencil.vue";
+import Delete from "../assets/icons/Delete.vue";
 const admin = ref(false);
 const props = defineProps({
   song: {
@@ -72,6 +74,10 @@ const props = defineProps({
     default: true,
   },
   playlistview: {
+    type: Boolean,
+    default: false,
+  },
+  isMobile: {
     type: Boolean,
     default: false,
   },

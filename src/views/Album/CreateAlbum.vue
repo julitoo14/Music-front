@@ -120,5 +120,10 @@
     margin-bottom: 1rem;
   }
 
+  @media (max-width: 768px) {
+    .container{
+      margin-top: 4em;
+    }
+  }
   </style>
   

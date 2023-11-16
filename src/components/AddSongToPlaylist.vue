@@ -172,13 +172,12 @@
     padding: 10px;
     border-top: 1px solid #ccc;
   }
-  
-  .modal-button {
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
+
+  @media (max-width: 768px) {
+    .modal{
+      margin-top: 3em;
+    }
   }
+  
+
   </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="homePage">
-    <h1 class="tittle">Search for an Artist, a Song or Playlist</h1>
+    <h1 class="title">Search for an Artist, a Song or a Playlist</h1>
     <input
       class="searchbar-full"
       v-model="searchTerm"
@@ -143,6 +143,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
 .item {
   background-color: rgba(2, 2, 2, 0.837);
   width: 100%;
@@ -188,7 +189,6 @@ onMounted(() => {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  margin-bottom: 6em;
   height: 100vh;
 }
 .searchbar-full {
@@ -220,5 +220,51 @@ onMounted(() => {
 
 .hero p {
   font-size: 1.2em;
+}
+
+@media (max-width: 768px) {
+  .homePage {
+    margin-top: 4em; /* Ajusta este valor según el tamaño de tu navbar */
+  }
+
+  .hero{
+    top: 35%;
+  }
+
+  .searchbar-full {
+    width: 90%;
+  }
+
+  .searchResults {
+    width: 90%;
+    margin-bottom: 8em;
+    overflow-y: auto;
+  }
+
+  .title{
+    text-align: center;
+    font-size: 1.4em;
+    padding: 0.3em;
+  }
+
+  .artist-image, .album-cover{
+    width: 30%;
+    margin: auto;
+  }
+
+  .item h3{
+    font-size: 1em;
+    width: 30%;
+    margin: auto;
+  }
+
+  .item h1{
+    font-size: 1.1em;
+    width: 30%;
+    margin: auto;
+  }
+
+
+
 }
 </style>

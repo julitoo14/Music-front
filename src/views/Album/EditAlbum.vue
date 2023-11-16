@@ -129,3 +129,11 @@ onMounted(() => {
   }
 });
 </script>
+
+<style>
+@media (max-width: 768px) {
+  .container{
+    margin-top: 4em;
+  }
+}
+</style>

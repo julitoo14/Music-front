@@ -28,7 +28,7 @@ const album = ref(props.album);
 .album-card {
   width: 100%;
   height: 100%;
-  max-width: 350px;
+  max-width: 400px;
   margin: 0 auto;
   text-align: center;
   padding: 1rem;
@@ -42,8 +42,7 @@ const album = ref(props.album);
 
 .album-card img {
   width: 100%;
-  max-width: 275px;
-  height: 275px;
+
   margin-bottom: 1rem;
 }
 

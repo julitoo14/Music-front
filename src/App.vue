@@ -1,11 +1,11 @@
 <template>
   <div class="view" :style="{ flexDirection: logged ? 'block' : 'flex' }">
-    <Navbar v-if="isMobile"></Navbar>
-    <Sidebar v-else></Sidebar>
+    <Navbar class="bar" v-if="isMobile"></Navbar>
+    <Sidebar class="bar" v-else></Sidebar>
     <RouterView
       class="main-view"
       @playSong="playSong"
-      style="position: relative; overflow-y: auto; width: 100%"
+      style="overflow-y: auto; width: 100%"
     ></RouterView>
     <Mp3Player
       :song="songInfo"
@@ -19,7 +19,7 @@
 
 <style scoped>
 .main-view {
-  padding-bottom: 5%;
+  margin-bottom: 5%;
 }
 
 .view {
@@ -33,6 +33,14 @@
   height: 100vh;
   display: flex;
 }
+
+@media (max-width: 768px) {
+  .view{
+    margin-bottom: 4em;
+  }
+}
+
+
 </style>
 
 <script setup>

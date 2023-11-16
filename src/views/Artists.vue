@@ -66,6 +66,8 @@ onMounted(fetchArtists);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  margin-bottom: 5em;
+  height: 100vh;
 }
 
 .card {

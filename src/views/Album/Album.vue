@@ -1,53 +1,50 @@
 <template>
   <div class="albumView">
     <div class="container-fluid">
-      <div class="row info p-3">
-        <div class="col-md-3">
+      <div class="info p-3">
+        <div class="album-cover">
           <img :src="albumImage" alt="Album Cover" class="img-fluid rounded" />
         </div>
-        <div class="col-md-9">
+        <div class="album-info">
           <h1>{{ album.title }}</h1>
           <h2>{{ artist.name }}</h2>
           <p>{{ album.description }}</p>
           <p>Year: {{ album.year }}</p>
-          <div v-if="admin" class="btn-group">
-            <button class="btn-success btn">
-              <RouterLink class="nav-link" :to="`/addSong/${albumId}`"
-                >Add Song
-              </RouterLink>
-            </button>
-            <button class="btn-primary btn">
-              <RouterLink class="nav-link" :to="`/editAlbum/${albumId}`"
-                >Edit Album</RouterLink
-              >
-            </button>
-            <button class="btn-danger btn" @click="removeAlbum">Remove</button>
+          <div v-if="admin" class="buttons">
+            <RouterLink class="nav-link" :to="`/addSong/${albumId}`"
+              ><AddIcon />
+            </RouterLink>
+
+            <RouterLink class="nav-link" :to="`/editAlbum/${albumId}`"
+              ><Pencil
+            /></RouterLink>
+
+            <Delete class="button" @click="removeAlbum"></Delete>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container-fluid">
-      <table v-if="showTable" class="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th class="text-left" scope="col">Name</th>
-            <th class="text-left" scope="col">Duration</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <Song
-          @playSong="$emit('playSong', song._id, songs)"
-          @removeSong="removeSong(song._id)"
-          @addSong="showAdd()"
-          v-for="song in songs"
-          :key="song._id"
-          :song="song"
-          :track="true"
-        />
-      </table>
-    </div>
+    <table v-if="showTable" class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th class="text-left" scope="col">Name</th>
+          <th v-if="!isMobile" class="text-left" scope="col">Duration</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <Song
+        @playSong="$emit('playSong', song._id, songs)"
+        @removeSong="removeSong(song._id)"
+        @addSong="showAdd()"
+        v-for="song in songs"
+        :key="song._id"
+        :song="song"
+        :track="true"
+        :isMobile="isMobile"
+      />
+    </table>
 
     <AddSongToPlaylist
       v-if="showAddPlaylistModal"
@@ -63,6 +60,9 @@ import { useRoute } from "vue-router";
 import { router } from "../../routes";
 import Song from "../../components/Song.vue";
 import AddSongToPlaylist from "../../components/AddSongToPlaylist.vue";
+import Delete from "../../assets/icons/Delete.vue";
+import Pencil from "../../assets/icons/Pencil.vue";
+import AddIcon from "../../assets/icons/AddIcon.vue";
 import {
   getAlbum,
   getSongsByAlbum,
@@ -80,6 +80,11 @@ const showTable = ref(false);
 const admin = ref(false);
 const showAddPlaylistModal = ref(false);
 const albumId = route.params.id;
+const isMobile = ref(window.innerWidth < 768);
+
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth < 768;
+};
 
 const showAdd = () => {
   showAddPlaylistModal.value = true;
@@ -115,9 +120,9 @@ const getFilesFromSongs = async () => {
   const promises = songs.value.map(async (song) => {
     const res = await getSong(song._id);
     song = res.song;
-    song.file = `http://localhost:3910/api/song/file/${song.file}?token=${localStorage.getItem(
-      "token"
-    )}`;
+    song.file = `http://localhost:3910/api/song/file/${
+      song.file
+    }?token=${localStorage.getItem("token")}`;
     return song;
   });
   songs.value = await Promise.all(promises);
@@ -142,6 +147,8 @@ const removeSong = async (id) => {
 };
 
 onMounted(() => {
+  window.addEventListener("resize", updateIsMobile);
+
   fetchAlbum();
   fetchSongs();
 
@@ -168,13 +175,61 @@ th {
 .info {
   color: white;
   background-color: rgba(0, 0, 0, 0.599);
+  display: flex;
+  flex-direction: row;
+  gap: 2em;
 }
-.songs {
-  color: white;
-  background-color: rgba(0, 0, 0, 0.599);
+.album-cover {
+  width: 400px;
 }
 
 .albumView {
   height: 100%;
+  margin-bottom: 2em;
+}
+.button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.buttons {
+  gap: 1em;
+  display: flex;
+  flex-direction: row;
+}
+
+.buttons svg {
+  width: 2em;
+  height: 2em;
+}
+
+.table {
+  overflow-y: auto;
+  margin-bottom: 7em;
+}
+
+@media (max-width: 768px) {
+  .albumView {
+    margin-top: 4em; /* Ajusta este valor según el tamaño de tu navbar */
+    margin-bottom: 4em; /* Ajusta este valor según el tamaño de tu reproductor de música */
+    height: 90%;
+  }
+
+  .album-cover {
+    width: 100%;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .table{
+    width: 95%;
+    margin: auto;
+    margin-bottom: 6em;
+    margin-top: 0.3em;
+  }
 }
 </style>
