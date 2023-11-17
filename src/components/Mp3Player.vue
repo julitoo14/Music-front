@@ -220,6 +220,7 @@ onMounted(() => {
   flex-direction: row;
   padding: 0.4em; 
   margin-top: 10%;
+  border-top: #a600ff solid 3px;
 }
 
 .play-pause {

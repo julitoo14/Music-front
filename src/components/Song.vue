@@ -21,7 +21,6 @@
         </Delete>
       </div>
       <div v-else class="btn-group">
-        <button v-if="!isMobile" class="btn btn-success" @click="$emit('playSong')">play</button>
         <AddIcon @click="$emit('addSong', selectSong())">+</AddIcon>
       </div>
       </td>

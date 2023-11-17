@@ -152,6 +152,7 @@ h2{
   top: 0;
   left: 0;
   z-index: 10000;
+  border-bottom: #a600ff solid 3px;
 }
 
 .logo {
