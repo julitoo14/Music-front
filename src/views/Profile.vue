@@ -56,6 +56,7 @@ import { useRoute} from "vue-router";
 import AddPlaylist from "../components/AddPlaylist.vue";
 import { deletePlaylist, getPlaylistsByUser, getUserProfile } from "../composables/apiServices";
 import DeleteModal from "../components/DeleteModal.vue";
+import { API_BASE_URL } from "../../config";
 const route = useRoute();
 const id = route.params.id;
 const user = ref({});
@@ -76,7 +77,7 @@ const fetchUser = async () => {
   try{
     const res = await getUserProfile(id);
     user.value = res.user;
-    avatarUrl.value = `http://localhost:3910/api/user/avatar/${user.value.image}`;
+    avatarUrl.value = `${API_BASE_URL}/user/avatar/${user.value.image}`;
   }catch(err){
     console.log(err.message);
   }

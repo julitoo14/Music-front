@@ -24,7 +24,7 @@
             <h3 class="col-2">Artist</h3>
             <h1 class="col-8">{{ artist.name }}</h1>
             <img
-              :src="`http://localhost:3910/api/artist/image/${artist.image}`"
+              :src="`${API_BASE_URL}/artist/image/${artist.image}`"
               class="col-2 artist-image"
             />
           </RouterLink>
@@ -44,7 +44,7 @@
             <h1 class="col-8">{{ album.title }}</h1>
             <img
               class="album-cover"
-              :src="`http://localhost:3910/api/album/image/${album.image}`"
+              :src="`${API_BASE_URL}/album/image/${album.image}`"
               alt=""
             />
           </RouterLink>
@@ -61,6 +61,7 @@
 <script setup>
 import { ref, onMounted, reactive } from "vue";
 import {getPlaylists, getArtists, getSongsBySearch, getAlbumsBySearch} from "../composables/apiServices";
+import { API_BASE_URL } from "../../config";
 const token = localStorage.getItem("token");
 const decoded = JSON.parse(atob(token.split(".")[1]));
 const nick = decoded.nick;

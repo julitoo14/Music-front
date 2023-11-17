@@ -1,7 +1,7 @@
 <template>
   <div class="bottom-navbar">
     <div class="songInfo">
-      <img :src="`http://localhost:3910/api/album/image/${cover}`" />
+      <img :src="`${API_BASE_URL}/album/image/${cover}`" />
       <div  class="div">
         <h4>{{ getSongInfo() }}</h4>
         <h5>{{ artist }}</h5>
@@ -71,6 +71,7 @@ import PauseIconVue from "../assets/icons/PauseIcon.vue";
 import NextIcon from "../assets/icons/NextIcon.vue";
 import PreviousIcon from "../assets/icons/PreviousIcon.vue";
 import { getAlbum } from "../composables/apiServices";
+import { API_BASE_URL } from "../../config";
 
 
 

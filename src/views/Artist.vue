@@ -31,7 +31,7 @@
         v-for="album in albums"
         :key="album._id"
         :album="album"
-        :albumImage="`http://localhost:3910/api/album/image/${album.image}`"
+        :albumImage="`https://juliangarciasuarez.tech/api/album/image/${album.image}`"
       />
     </div>
     <DeleteModal
@@ -49,6 +49,7 @@ import { useRoute, useRouter } from "vue-router";
 import Album from "../components/Album.vue";
 import { deleteArtist, getArtist, getAlbumsByArtist } from "../composables/apiServices";
 import DeleteModal from "../components/DeleteModal.vue";
+import { API_BASE_URL } from "../../config";
 
 const router = useRouter();
 const route = useRoute();
@@ -74,7 +75,7 @@ const getArtistData = async () => {
     
     const res = await getArtist(artistId);
     artist.value = res.artist;
-    image.value = `http://localhost:3910/api/artist/image/${artist.value.image}`;
+    image.value = `${API_BASE_URL}/artist/image/${artist.value.image}`;
   } catch (error) {
     console.log(error.response.data.message);
   }

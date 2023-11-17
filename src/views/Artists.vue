@@ -5,7 +5,7 @@
           <RouterLink :to="`/artist/${artist._id}`">
 
             <div class="card  bg-dark mb-4 box-shadow">
-              <img class="card-img" :src="`http://localhost:3910/api/artist/image/${artist.image}`" alt="Artist Image">
+              <img class="card-img" :src="`${API_BASE_URL}/artist/image/${artist.image}`" alt="Artist Image">
               <div class="card-img-overlay">
                 <p class="text-light text-center ">{{ artist.name }}</p>
                 
@@ -31,6 +31,7 @@
 <script setup>
 import { reactive, onMounted } from "vue";
 import { getArtists } from "../composables/apiServices";
+import { API_BASE_URL } from "../../config";
 
 const state = reactive({
   artists: [],

@@ -43,6 +43,7 @@ import Song from "../components/Song.vue";
 import { onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { getSongsByPlaylist, getSong, removeSongFromPlaylist } from "../composables/apiServices";
+import { API_BASE_URL } from "../../config";
 const songs = ref([]);
 const playlistSongs = ref([]);
 const route = useRoute();
@@ -70,7 +71,7 @@ const getSongsFiles = async  () => {
   const promises = playlistSongs.value.map(async (song) => {
     const res = await getSong(song);
     song = res.song;
-    song.file = `http://localhost:3910/api/song/file/${song.file}?token=${localStorage.getItem(
+    song.file = `${API_BASE_URL}/song/file/${song.file}?token=${localStorage.getItem(
       "token"
     )}`;
     return song;

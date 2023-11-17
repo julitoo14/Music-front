@@ -80,7 +80,7 @@
         aria-expanded="false"
       >
         <img
-          :src="`http://localhost:3910/api/user/avatar/${userImage}`"
+          :src="`${API_BASE_URL}/user/avatar/${userImage}`"
           width="32"
           height="32"
           class="rounded-circle me-2"
@@ -116,6 +116,7 @@ import ArtistIcon from "../assets/icons/ArtistIcon.vue";
 import ProfileIcon from "../assets/icons/ProfileIcon.vue";
 import LoginIcon from "../assets/icons/LoginIcon.vue";
 import Add from "../assets/icons/Add.vue";
+import { API_BASE_URL } from "../../config";
 
 const admin = ref(false);
 const logged = ref("");

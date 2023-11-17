@@ -63,6 +63,7 @@ import AddSongToPlaylist from "../../components/AddSongToPlaylist.vue";
 import Delete from "../../assets/icons/Delete.vue";
 import Pencil from "../../assets/icons/Pencil.vue";
 import AddIcon from "../../assets/icons/AddIcon.vue";
+import { API_BASE_URL } from "../../../config";
 import {
   getAlbum,
   getSongsByAlbum,
@@ -95,7 +96,7 @@ const fetchAlbum = async () => {
     const res = await getAlbum(albumId);
     album.value = res.album;
     artist.value = res.album.artist;
-    albumImage.value = `http://localhost:3910/api/album/image/${album.value.image}`;
+    albumImage.value = `${API_BASE_URL}/album/image/${album.value.image}`;
   } catch (err) {
     console.log(err.response.data.message);
   }
@@ -120,7 +121,7 @@ const getFilesFromSongs = async () => {
   const promises = songs.value.map(async (song) => {
     const res = await getSong(song._id);
     song = res.song;
-    song.file = `http://localhost:3910/api/song/file/${
+    song.file = `${API_BASE_URL}/song/file/${
       song.file
     }?token=${localStorage.getItem("token")}`;
     return song;
