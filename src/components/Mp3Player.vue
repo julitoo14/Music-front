@@ -323,6 +323,7 @@ onMounted(() => {
     height: 15%;
     display: flex;
     flex-direction: column;
+    bottom:60px;
 
   }
 

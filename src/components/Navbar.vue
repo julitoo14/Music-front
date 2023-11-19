@@ -1,21 +1,5 @@
 <template>
   <nav class="navbar">
-    <RouterLink class="navbar-brand" to="/">
-      <img class="logo" src="/logo.png" alt="" />
-      <h2 class="m-2">SoundJam</h2>
-    </RouterLink>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-        <CollapseIcon />
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
       <ul v-if="logged" class="navbar-nav">
         <li>
           <RouterLink
@@ -23,7 +7,7 @@
             to="/"
           >
             <HomeIcon />
-            <p class="m-1">Home</p>
+            <p class="m-1"></p>
           </RouterLink>
         </li>
         <li>
@@ -31,8 +15,8 @@
             class="link d-inline-flex nav-link link-light p-1 align-items-center"
             :to="`/profile/${id}`"
           >
-            <ProfileIcon />
-            <p class="m-1">Profile</p>
+            <Search />
+            <p class="m-1"></p>
           </RouterLink>
         </li>
         <li>
@@ -40,8 +24,8 @@
             class="link d-inline-flex nav-link link-light p-1 align-items-center"
             to="/artists"
           >
-            <ArtistIcon />
-            <p class="m-1">Artists</p>
+            <ProfileIcon />
+            <p class="m-1"></p>
           </RouterLink>
         </li>
         <li v-if="admin">
@@ -50,17 +34,7 @@
             to="/createArtist"
           >
             <Add />
-            <p class="m-1">Add Artist</p>
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink
-            class="link d-inline-flex nav-link link-light p-1 align-items-center"
-            @click="signOut"
-            to="/login"
-          >
-            <Exit />
-            <p class="m-1">Sign Out</p>
+            <p class="m-1"></p>
           </RouterLink>
         </li>
       </ul>
@@ -84,7 +58,6 @@
           </RouterLink>
         </li>
       </ul>
-    </div>
   </nav>
 </template>
 
@@ -96,8 +69,7 @@ import ArtistIcon from "../assets/icons/ArtistIcon.vue";
 import ProfileIcon from "../assets/icons/ProfileIcon.vue";
 import LoginIcon from "../assets/icons/LoginIcon.vue";
 import Add from "../assets/icons/Add.vue";
-import Exit from "../assets/icons/Exit.vue";
-import CollapseIcon from "../assets/icons/CollapseIcon.vue";
+import Search from "../assets/icons/Search.vue";
 
 const admin = ref(false);
 const logged = ref("");
@@ -143,42 +115,29 @@ h2{
 
 .navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  flex-direction: row;
   align-items: center;
-  padding: 0 1em;
   width: 100%;
   background-color: rgb(26, 27, 27);
   position: fixed;
-  top: 0;
+  bottom: 0;
   left: 0;
   z-index: 10000;
-  border-bottom: #a600ff solid 3px;
-}
-
-.logo {
-  width: 2em;
-  height: 2em;
-}
-
-.navbar-brand {
-  display: flex;
-  align-items: center;
+  height: 60px;
 }
 
 .navbar-nav {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 1em;
-  padding: 1em;
+  justify-content: space-evenly;
+  width: 100%;
 }
 
-.link {
-  gap: 1em;
-  display: flex;
-  justify-content: center;
-}
 
-.link p {
-    width: 30%;
+svg{
+    width: 2em;
+    height: 2em;
 }
 </style>

@@ -21,6 +21,11 @@ export async function getAlbumsByArtist(artistId) {
     return response.data;
 }
 
+export async function getRandomAlbums() {
+    const response = await axios.get(`${API_BASE_URL}/album/randomList`,config);
+    return response.data;
+}
+
 export async function getAlbum(id) {
     const response = await axios.get(`${API_BASE_URL}/album/one/${id}`,config);
     return response.data;

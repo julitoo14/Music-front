@@ -1,13 +1,18 @@
 <template>
   <div class="homePage">
-    <h1 class="title">Search for an Artist, a Song or a Playlist</h1>
-    <input
+    <div class="hero">
+      <h1>Welcome {{ nick }} to SoundJam!</h1>
+      <h5>Explore, discover, and share your favorite music!</h5>
+    </div>
+    <div style="width: 100%;">
+      <input
       class="searchbar-full"
       v-model="searchTerm"
       @input="search"
       type="text"
       placeholder="What should you listen to today?"
-    />
+      />
+    </div>
 
     <div v-if="searchTerm" class="searchResults">
       <ul ref="list" class="list">
@@ -51,17 +56,43 @@
         </li>
       </ul>
     </div>
-    <div class="hero" v-else-if="!searchTerm">
-      <h1>Welcome {{ nick }} to SoundJam!</h1>
-      <p>Explore, discover, and share yout favourite music!</p>
+
+    <div v-else>
+      <h1>Albums</h1>
+      <div class="albums">
+
+        <Album
+        class="album"
+        v-for="album in albums"
+        :key="album._id"
+        :album="album"
+        :albumImage="`${API_BASE_URL}/album/image/${album.image}`"
+        />
+      </div>
+      <h1>Artists</h1>
+      <div class="albums">
+        <Artist
+        v-for="artist in state.artists"
+        :key="artist._id"
+        :artist="artist"
+        :artistImage="`${API_BASE_URL}/artist/image/${artist.image}`"
+        class="album"
+        />
+      </div>
     </div>
+
+
+
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, reactive } from "vue";
-import {getPlaylists, getArtists, getSongsBySearch, getAlbumsBySearch} from "../composables/apiServices";
+import {getPlaylists, getArtists, getRandomAlbums, getSongsBySearch, getAlbumsBySearch} from "../composables/apiServices";
 import { API_BASE_URL } from "../../config";
+import Album from "../components/Album.vue";
+import Artist from "../components/Artist.vue";
+
 const token = localStorage.getItem("token");
 const decoded = JSON.parse(atob(token.split(".")[1]));
 const nick = decoded.nick;
@@ -101,6 +132,15 @@ const fetchArtists = async () => {
   }
 };
 
+const fetchAlbums = async () => {
+  try {
+    const res = await getRandomAlbums();
+    albums.value = res.albums;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
 const searchArtists = async () => {
   searchArtistsResults.value = state.artists.filter((artist) =>
     artist.name.toLowerCase().includes(searchTerm.value.toLowerCase())
@@ -134,12 +174,14 @@ const search = async () => {
   } else {
     fetchArtists();
     fetchPlaylists();
+    fetchAlbums();
   }
 };
 
 onMounted(() => {
   fetchPlaylists();
   fetchArtists();
+  fetchAlbums();
 });
 </script>
 
@@ -190,12 +232,11 @@ onMounted(() => {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 100vh;
+  height: 80vh;
 }
 .searchbar-full {
   width: 70%;
   background-color: rgba(85, 84, 84, 0.429);
-  border-radius: 10px;
   border: rgb(255, 255, 255) solid 3px;
   height: 60px;
   text-align: center;
@@ -205,41 +246,61 @@ onMounted(() => {
 }
 .searchResults {
   width: 70%;
-  height: 100%;
+  height: 40em;
 }
 
-.hero {
-  text-align: center;
-  max-width: 800px;
-  position: absolute;
-  top: 40%;
-}
-
-.hero h1 {
-  font-size: 2.5em;
-}
-
-.hero p {
-  font-size: 1.2em;
-}
-
-@media (max-width: 768px) {
-  .homePage {
-    margin-top: 4em; /* Ajusta este valor según el tamaño de tu navbar */
+.albums{
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    width: 25em;
+    gap: 0.1em;
   }
 
+  h1{
+    color: white;
+    font-size: 2em;
+    margin-bottom: 0.5em;
+  }
+
+
+@media (max-width: 768px) {
+
   .hero{
-    top: 35%;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    text-align: center;
+  }
+
+  .hero h1{
+    font-size: 1.5em;
+  }
+
+  .hero h5{
+    font-size: 1em;
   }
 
   .searchbar-full {
-    width: 90%;
+    width: 100%;
+    border: none;
+    height: 2.5em;
   }
 
   .searchResults {
     width: 90%;
     margin-bottom: 8em;
     overflow-y: auto;
+  }
+
+  .albums{
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    width: 25em
+  }
+
+  .album{
+    width: 20em;
   }
 
   .title{
