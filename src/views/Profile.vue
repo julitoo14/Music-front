@@ -7,12 +7,14 @@
         <h1>{{ user.name }}</h1>
         <h3>{{ user.nick }} ~ {{ user.email }}</h3>
       </div>
-      <button class="btn btn-light" @click="showAddPlaylist">
-        Add Playlist
-      </button>
+      <div class="top-buttons">
+        <button class="top-button"><RouterLink class="nav-link" :to="`/editUser/${id}`">Edit User</RouterLink></button>
+        <button class="top-button" @click="signOut">Sign Out</button>
+      </div>
     </div>
 
     <div class="container-fluid ">
+      <h1 >Playlists</h1>
       <table v-if=(showTable) class="table table-hover">
         <thead >
           <tr>
@@ -34,6 +36,9 @@
         </tbody>
       </table>
     </div>
+    <button class="top-button" @click="showAddPlaylist">
+      New Playlist
+    </button>
     <AddPlaylist
       v-if="showPlaylistModal"
       @close="showPlaylistModal = false"
@@ -52,12 +57,13 @@
 
 <script setup>
 import { onMounted, ref, reactive } from "vue";
-import { useRoute} from "vue-router";
+import { useRoute, useRouter} from "vue-router";
 import AddPlaylist from "../components/AddPlaylist.vue";
 import { deletePlaylist, getPlaylistsByUser, getUserProfile } from "../composables/apiServices";
 import DeleteModal from "../components/DeleteModal.vue";
 import { API_BASE_URL } from "../../config";
 const route = useRoute();
+const router = useRouter();
 const id = route.params.id;
 const user = ref({});
 const avatarUrl = ref("");
@@ -71,6 +77,14 @@ const alert = reactive({
   message: "",
   type: "danger",
 });
+
+const signOut = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("nick");
+  localStorage.removeItem("id");
+  router.push("/login");
+  
+};
 
 
 const fetchUser = async () => {
@@ -131,11 +145,13 @@ div{
   background-color: black;
   color: white;
   border: black solid 1px;
+  
 }
 
 .table{
   border: none;
   color: white;
+  margin: auto;
 }
 
 .table th{
@@ -149,6 +165,22 @@ div{
   width: 12em;
   height: 12em;
   border-radius: 50%;
+}
+
+.top-button{
+  height: 4em;
+  text-align: center;
+  margin: 0.5em;
+  width: 6em;
+  border-radius: 10px;
+  background-color: rgb(242, 237, 237);
+  color: black;
+}
+
+.top-buttons{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 form {
@@ -181,24 +213,38 @@ button {
     height: 8em;
   }
 
+  .info{
+    text-align: center;
+  }
+
   .top h1 {
     font-size: 3em;
   }
 
   .top h3{
-    font-size: 1em;
+    font-size: 0.8em;
   }
-}
 
-@media (max-width: 1000px) {
   .top{
-    margin-top: 4em;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .add-playlist-modal{
-    margin-top: 4em;
+  .info p{
+    display: none;
   }
+
+  .top-button{
+    width: 8em;
+    height: 3em;
+    font-size: 0.8em;
+  }
+
+
+
 
 }
+
+
   
 </style>

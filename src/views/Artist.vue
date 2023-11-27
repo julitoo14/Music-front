@@ -1,47 +1,50 @@
 <template>
-  <div class="artist-container" >
-    <div class="artist-info row" >
-      <div class="name-img row">
-        <img class="artist-image col-sm-12  " :src="image">
-        <h1 class="col-12">{{ artist.name }}</h1>
-      </div>
-      <div>
-        <p style="overflow-y: auto">{{ artist.description }}</p>
-
-        <div v-if="admin">
-          <button class="btn-success btn">
-            <RouterLink class="nav-link" :to="`/createAlbum/${artist._id}`"
-            >Create Album</RouterLink
-            >
-          </button>
-          <button class="btn-primary btn">
-            <RouterLink class="nav-link" :to="`/editArtist/${artist._id}`"
-            >Edit Artist</RouterLink
-            >
-          </button>
-          <button class="btn-danger btn" @click="showDeleteModal = true">
-            Remove Artist
-          </button>
+  <div class="container-fluid page">
+    
+    <div class="artist-container" >
+      <div class="artist-info " >
+        <div class="name-img ">
+          <img class="artist-image " :src="image">
+          <h1 class="">{{ artist.name }}</h1>
+        </div>
+        <div>
+          <p class="description">{{ artist.description }}</p>
+          
+          <div v-if="admin">
+            <button class="btn-success btn">
+              <RouterLink class="nav-link" :to="`/createAlbum/${artist._id}`"
+              >Create Album</RouterLink
+              >
+            </button>
+            <button class="btn-primary btn">
+              <RouterLink class="nav-link" :to="`/editArtist/${artist._id}`"
+              >Edit Artist</RouterLink
+              >
+            </button>
+            <button class="btn-danger btn" @click="showDeleteModal = true">
+              Remove Artist
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="albums-container row">
-      <Album
-        class="albums col-lg-3 col-md-6 col-sm-12"
+      <div class="albums">
+        <Album
+        class="album"
         v-for="album in albums"
         :key="album._id"
         :album="album"
         :albumImage="`https://juliangarciasuarez.tech/api/album/image/${album.image}`"
-      />
+        />
+      </div>
     </div>
-    <DeleteModal
-    v-if="showDeleteModal"
-    @close="showDeleteModal = false"
-    :show="showDeleteModal"
-    @delete="removeArtist(artistId), showDeleteModal = false"
-    ></DeleteModal>
   </div>
-</template>
+  <DeleteModal
+  v-if="showDeleteModal"
+  @close="showDeleteModal = false"
+  :show="showDeleteModal"
+  @delete="removeArtist(artistId), showDeleteModal = false"
+  ></DeleteModal>
+  </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
@@ -106,8 +109,12 @@ onMounted(() => {
 
 
 <style scoped>
+
+.page{
+  height: min-content;
+}
+
 .artist-container {
-  height: 90vh;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -116,11 +123,6 @@ onMounted(() => {
   padding: 20px;
 }
 
-.albums {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .artist-info {
   background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
@@ -129,7 +131,7 @@ onMounted(() => {
   color: white;
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: flex-start;
 }
@@ -151,12 +153,21 @@ onMounted(() => {
   margin-right: 20px;  
 }
 
-.albums-container {
-  margin-top: 20px;
-  margin-bottom: 4em;
-  width: 100%;
+.albums{
   display: flex;
+  flex-direction: row;
+  padding: 1em;
+  width: 100%;
 }
+
+.album{
+  background-color: rgba(0, 0, 0, 0.729);
+}
+
+.album:hover{
+  background-color: rgb(46, 45, 45);
+}
+
 
 h1 {
   font-size: 4rem;
@@ -168,17 +179,25 @@ h2 {
   margin-bottom: 10px;
 }
 
-p {
-  font-size: 1.5rem;
+.description {
+  font-size: 1.3rem;
   margin-bottom: 20px;
+  height: 9em;
+  overflow-x: auto;
 }
 
 
+
 @media (max-width: 768px) {
+
+  .description{
+    font-size: 1rem;
+    height: 10em;
+    overflow: scroll;
+  }
   .artist-container {
     padding: 10px;
     margin-bottom: 5em;
-    padding-top: 5em;
   }
 
   .artist-info {
@@ -187,8 +206,8 @@ p {
   }
 
   .name-img {
-    margin-right: 0;
-    margin-bottom: 20px;
+    gap: 0.3em;
+    margin: auto;
   }
 
   .artist-image {
@@ -196,10 +215,13 @@ p {
     height: 200px;
   }
 
-  .albums-container {
-    margin-top: 20px;
-  }
 
+  .albums{
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    width: 20em;
+  }
   h1 {
     font-size: 2rem;
   }

@@ -1,15 +1,15 @@
 <template>
   <div class="bottom-navbar">
     <div class="songInfo">
-      <img :src="`${API_BASE_URL}/album/image/${cover}`" />
-      <div  class="div">
-        <h4>{{ getSongInfo() }}</h4>
-        <h5>{{ artist }}</h5>
+      <img v-if="!isMobile" :src="`${API_BASE_URL}/album/image/${cover}`" />
+      <div id="scroll-container" class="name-artist-div">
+        <h4 id="scroll-text" class="song-name">{{ getSongInfo() }}</h4>
+        <h5 v-if="!isMobile">{{ artist }}</h5>
       </div>
     </div>
     <div class="controls">
       <div class="buttons">
-        <PreviousIcon @click="previousSong"></PreviousIcon>
+        <PreviousIcon class="play-pause" @click="previousSong"></PreviousIcon>
         <PlayIconVue
           v-if="!isPlaying"
           class="play-pause"
@@ -20,7 +20,7 @@
           class="play-pause"
           @click="togglePlay"
         ></PauseIconVue>
-        <NextIcon @click="nextSong"></NextIcon>
+        <NextIcon class="play-pause" @click="nextSong"></NextIcon>
       </div>
       <div class="timeInfo">
         {{ formatTime(currentTime) }}
@@ -95,10 +95,10 @@ const album = ref("");
 const cover = ref("default.png");
 const artist = ref("");
 
-const isMobile = ref(window.innerWidth < 768);
+const isMobile = ref(window.innerWidth < 1000);
 
 const updateIsMobile = () => {
-  isMobile.value = window.innerWidth < 768;
+  isMobile.value = window.innerWidth < 1000;
 };
 
 
@@ -227,7 +227,7 @@ onMounted(() => {
 .play-pause {
   width: 50px;
   height: 50px;
-  margin: 0 20px;
+  margin: 0 10px;
   cursor: pointer;
 }
 
@@ -318,18 +318,70 @@ onMounted(() => {
   cursor: pointer;
 }
 
+#scroll-container {
+  overflow: hidden;
+  width: 90%;
+}
+
+#scroll-text {
+  text-align: right;
+  white-space: nowrap;
+
+  /* animation properties */
+  -moz-transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
+  transform: translateX(-100%);
+  
+  -moz-animation: my-animation 8s linear infinite;
+  -webkit-animation: my-animation 8s linear infinite;
+  animation: my-animation 8s linear infinite;
+}
+
+/* for Firefox */
+@-moz-keyframes my-animation {
+  from { -moz-transform: translateX(-100%); }
+  to { -moz-transform: translateX(100%); }
+}
+
+/* for Chrome */
+@-webkit-keyframes my-animation {
+  from { -webkit-transform: translateX(-100%); }
+  to { -webkit-transform: translateX(100%); }
+}
+
+@keyframes my-animation {
+  from {
+    -moz-transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
+  to {
+    -moz-transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
+  }
+}
+
 @media (max-width: 768px) {
   .bottom-navbar {
-    height: 15%;
-    display: flex;
-    flex-direction: column;
-    bottom:60px;
-
+    height: 7%;
+    flex-direction: row;
+    bottom:40px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
   }
 
   .songInfo, .controls {
     width: 100%;
     padding: 0 10px;
+  }
+
+  .name-artist-div{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .songInfo{
@@ -338,18 +390,24 @@ onMounted(() => {
     align-items: center;
   }
 
-  .songInfo img {
-    width: 60px;
-  }
 
   .play-pause {
-    width: 40px;
-    height: 40px;
+    width: 1.8em;
+    height: 1.8em;
   }
 
   .volume-slider, .slider {
     width: 80%;
   }
+
+  .timeInfo{
+    display: none;
+  }
+
+  .song-name{
+    font-size: 1.2em;
+  }
+
 
   .controls{
     width: 100%;

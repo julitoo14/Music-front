@@ -15,8 +15,17 @@
           class="link d-inline-flex nav-link link-light p-1 align-items-center"
           to="/"
         >
-          <HomeIcon />
-          <p class="m-1">Home</p>
+          <HomeIcon/>
+          <p class="m-1">Search</p>
+        </RouterLink>
+      </li>
+      <li>
+        <RouterLink
+          class="link d-inline-flex nav-link link-light p-1 align-items-center"
+          to="/library"
+        >
+          <LibraryIcon />
+          <p class="m-1">Library</p>
         </RouterLink>
       </li>
       <li>
@@ -24,17 +33,8 @@
           class="link d-inline-flex nav-link link-light p-1 align-items-center"
           :to="`/profile/${id}`"
         >
-          <Search />
-          <p class="m-1">Search</p>
-        </RouterLink>
-      </li>
-      <li>
-        <RouterLink
-          class="link d-inline-flex nav-link link-light p-1 align-items-center"
-          to="/artists"
-        >
           <ProfileIcon />
-          <p class="m-1">Library</p>
+          <p class="m-1">Profile</p>
         </RouterLink>
       </li>
       <li v-if="admin">
@@ -112,7 +112,7 @@
 import { RouterLink} from "vue-router";
 import { watch, ref, onMounted } from "vue";
 import HomeIcon from "../assets/icons/HomeIcon.vue";
-import Search from '../assets/icons/Search.vue'
+import LibraryIcon from "../assets/icons/LibraryIcon.vue";
 import ProfileIcon from "../assets/icons/ProfileIcon.vue";
 import LoginIcon from "../assets/icons/LoginIcon.vue";
 import Add from "../assets/icons/Add.vue";

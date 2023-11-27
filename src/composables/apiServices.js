@@ -181,3 +181,18 @@ export async function updateArtist(id, name, description) {
     return response.data;
 }
 
+export async function updateUser(updatedUser) {
+    const response = await axios.put(`${API_BASE_URL}/user/update`, updatedUser , config);
+    return response.data; 
+}
+
+export async function uploadUserImage(image) {
+    const response = await axios.put(`${API_BASE_URL}/user/upload`, image, {
+        headers: {
+          Authorization: `${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+    return response.data; 
+}
+

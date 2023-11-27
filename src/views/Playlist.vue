@@ -28,14 +28,9 @@
 <style scoped>
   .table{
     width: 100%;
-    margin-bottom: 5em;
+    background-color: black;
   }
 
-  @media screen and (max-width: 1000px) {
-    .table{
-      margin-top: 5em;
-    }
-  }
 </style>
 
 <script setup>

@@ -4,7 +4,6 @@ import Login from './views/Login.vue';
 import Home from './views/Home.vue';
 import Profile from './views/Profile.vue';
 import CreateArtist from './views/CreateArtist.vue';
-import Artists from './views/Artists.vue';
 import Artist from './views/Artist.vue';
 import EditArtist from './views/EditArtist.vue';
 import Album from './views/Album/Album.vue';
@@ -13,6 +12,8 @@ import EditAlbum from './views/Album/EditAlbum.vue';
 import AddSong from './views/Song/AddSong.vue';
 import EditSong from './views/Song/EditSong.vue';
 import Playlist from './views/Playlist.vue';
+import EditUser from './views/EditUser.vue';
+import Library from './views/Library.vue';
 
 const routes = [
     {
@@ -40,13 +41,6 @@ const routes = [
     {
         path: '/createArtist',
         component: CreateArtist,
-        meta: {
-            requiresAuth: true
-        }
-    },
-    {
-        path: '/artists',
-        component: Artists,
         meta: {
             requiresAuth: true
         }
@@ -103,6 +97,20 @@ const routes = [
     {
         path: '/playlist/:id',
         component: Playlist,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/editUser/:id',
+        component: EditUser,
+        meta: {
+            requiresAuth: true
+        }
+    },
+    {
+        path: '/library',
+        component: Library,
         meta: {
             requiresAuth: true
         }

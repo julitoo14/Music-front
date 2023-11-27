@@ -57,7 +57,7 @@
       </ul>
     </div>
 
-    <div v-else>
+    <div class="container-fluid homeScreen" v-else>
       <h1>Albums</h1>
       <div class="albums">
 
@@ -232,12 +232,10 @@ onMounted(() => {
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 80vh;
 }
 .searchbar-full {
-  width: 70%;
+  width: 100%;
   background-color: rgba(85, 84, 84, 0.429);
-  border: rgb(255, 255, 255) solid 3px;
   height: 60px;
   text-align: center;
   color: rgb(255, 255, 255);
@@ -253,18 +251,37 @@ onMounted(() => {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
-    width: 25em;
-    gap: 0.1em;
+    width: 100%;
+    margin: auto;
+  }
+
+  .album{
+    width: 20em;
+    background-color: rgba(0, 0, 0, 0.729);
+  }
+
+  .album:hover{
+    background-color: rgb(46, 45, 45);
   }
 
   h1{
     color: white;
     font-size: 2em;
+    margin-top: 0.5em;
     margin-bottom: 0.5em;
   }
 
 
 @media (max-width: 768px) {
+
+
+  .homePage {
+    min-height: max-content;
+  }
+
+  .homeScreen{
+    margin-bottom: 80px;
+  }
 
   .hero{
     margin-top: 0.5em;
@@ -296,11 +313,12 @@ onMounted(() => {
     display: flex;
     flex-direction: row;
     overflow-x: auto;
-    width: 25em
+    width: 95%;
   }
 
   .album{
     width: 20em;
+    background-color: rgba(0, 0, 0, 0.795);
   }
 
   .title{

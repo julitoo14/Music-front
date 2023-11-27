@@ -26,8 +26,8 @@
   
   <style scoped>
   .album-card {
-    width: 12em;
-    height: 12em;
+    width: 13em;
+    height: 13em;
     margin: 0 auto;
     text-align: center;
     padding: 1rem;

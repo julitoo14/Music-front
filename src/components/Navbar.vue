@@ -13,16 +13,16 @@
         <li>
           <RouterLink
             class="link d-inline-flex nav-link link-light p-1 align-items-center"
-            :to="`/profile/${id}`"
+            to="/library"
           >
-            <Search />
+          <LibraryIcon />
             <p class="m-1"></p>
           </RouterLink>
         </li>
         <li>
           <RouterLink
             class="link d-inline-flex nav-link link-light p-1 align-items-center"
-            to="/artists"
+            :to="`/profile/${id}`"
           >
             <ProfileIcon />
             <p class="m-1"></p>
@@ -65,11 +65,11 @@
 import { RouterLink } from "vue-router";
 import { watch, ref, onMounted } from "vue";
 import HomeIcon from "../assets/icons/HomeIcon.vue";
-import ArtistIcon from "../assets/icons/ArtistIcon.vue";
 import ProfileIcon from "../assets/icons/ProfileIcon.vue";
 import LoginIcon from "../assets/icons/LoginIcon.vue";
 import Add from "../assets/icons/Add.vue";
 import Search from "../assets/icons/Search.vue";
+import LibraryIcon from "../assets/icons/LibraryIcon.vue";
 
 const admin = ref(false);
 const logged = ref("");
@@ -94,13 +94,6 @@ onMounted(async () => {
   }
 });
 
-const signOut = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("nick");
-  localStorage.removeItem("id");
-  logged.value = false;
-  router.push("/login");
-};
 
 watch(logged, (newVal) => {
   logged.value = newVal;
@@ -115,8 +108,8 @@ h2{
 
 .navbar {
   display: flex;
-  justify-content: center;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
   width: 100%;
   background-color: rgb(26, 27, 27);
@@ -124,7 +117,7 @@ h2{
   bottom: 0;
   left: 0;
   z-index: 10000;
-  height: 60px;
+  height: 40px;
 }
 
 .navbar-nav {
@@ -133,11 +126,12 @@ h2{
   align-items: center;
   justify-content: space-evenly;
   width: 100%;
+  height: 100%;
 }
 
 
 svg{
-    width: 2em;
-    height: 2em;
+    width: 1.7em;
+    height: 1.7em;
 }
 </style>

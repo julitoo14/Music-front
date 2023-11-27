@@ -8,6 +8,7 @@
       style="overflow-y: auto; width: 100%"
     ></RouterView>
     <Mp3Player
+    class="mp3"
       :song="songInfo"
       :files="file"
       @previous="playPreviousSong"
@@ -22,6 +23,7 @@
   height: 90vh;
 }
 
+
 .view {
   background: linear-gradient(
     180deg,
@@ -30,7 +32,7 @@
     rgba(54, 55, 55, 1) 86%
   );
   width: 100%;
-  min-height: 100vh;
+  min-height: max-content;
   display: flex;
 }
 
@@ -44,17 +46,17 @@ import { isPlaying } from "./composables/useAudioPlayer.js";
 import Navbar from "./components/Navbar.vue";
 import Sidebar from "./components/Sidebar.vue";
 import Mp3Player from "./components/Mp3Player.vue";
-import { ref, onMounted, watchEffect } from "vue";
+import { ref, onMounted} from "vue";
 const logged = ref(false);
 const file = ref("");
 const playlist = ref([]);
 const currentIndex = ref(0);
 const songInfo = ref(null);
 
-const isMobile = ref(window.innerWidth < 1000);
+const isMobile = ref(window.innerWidth <= 768);
 
 const updateIsMobile = () => {
-  isMobile.value = window.innerWidth < 1000;
+  isMobile.value = window.innerWidth <= 768;
 };
 
 onMounted(() => {
