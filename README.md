@@ -1,7 +1,18 @@
-# Vue 3 + Vite
+# SoundJam
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Esta es una aplicación de música que permite a los usuarios escuchar música, crear listas de reproducción y descubrir nuevos artistas y álbumes. La aplicación está construida con Vue.js.
 
-## Recommended IDE Setup
+## Características 🎵
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- **Usuarios Administradores**: Los usuarios administradores pueden crear artistas, álbumes y subir música. Esto permite a los administradores mantener una biblioteca de música actualizada y diversa.
+
+- **Usuarios Normales**: Los usuarios normales pueden escuchar la música subida por los administradores, descubrir nuevos artistas y álbumes, y crear sus propias listas de reproducción. Esto permite a los usuarios personalizar su experiencia de escucha de música.
+
+## Construido con 🛠️
+
+- Vue.js - Framework de JavaScript para construir interfaces de usuario
+- Vue Router - Router oficial para Vue.js
+
+## Autor 💻
+
+Julian Garcia - Julitoo14
