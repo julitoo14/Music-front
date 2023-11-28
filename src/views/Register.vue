@@ -170,6 +170,16 @@ form {
     justify-content: flex-start;
     align-items: center;
     width: 100%;
-    padding-top: 2em;
+}
+
+@media (max-width: 768px) {
+  form {
+    width: 90%;
+  }
+
+  .page{
+    padding-bottom: 4em;
+  }
+
 }
 </style>

@@ -11,7 +11,7 @@
         </div>
         <div v-else-if="admin" class="btn-group">
           <button v-if="!isMobile" class="btn btn-success" @click="$emit('playSong')">play</button>
-        <AddIcon  @click="$emit('addSong',selectSong())" /> 
+        <AddIcon  @click.stop="$emit('addSong',selectSong())" /> 
           <RouterLink class="nav-link" :to="`/editSong/${song._id}`"
             > <Pencil></Pencil> </RouterLink
           >
@@ -21,7 +21,7 @@
         </Delete>
       </div>
       <div v-else class="btn-group">
-        <AddIcon @click="$emit('addSong', selectSong())">+</AddIcon>
+        <AddIcon @click.stop="$emit('addSong', selectSong())">+</AddIcon>
       </div>
       </td>
     </tr>
