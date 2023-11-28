@@ -280,7 +280,7 @@ onMounted(() => {
   }
 
   .homeScreen{
-    margin-bottom: 80px;
+    margin-bottom: 8em;
   }
 
   .hero{

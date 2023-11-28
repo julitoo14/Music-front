@@ -82,7 +82,7 @@ const login = async () => {
     user.value = res.user;
     token.value = res.token;
     setLocalStorage();
-    router.push('/');
+    router.go('/');
   }catch(err){
     showAlert(err.response.data.message);
   }  

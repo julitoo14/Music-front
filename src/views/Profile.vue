@@ -82,7 +82,7 @@ const signOut = () => {
   localStorage.removeItem("token");
   localStorage.removeItem("nick");
   localStorage.removeItem("id");
-  router.push("/login");
+  router.go("/login");
   
 };
 

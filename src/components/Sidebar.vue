@@ -22,15 +22,6 @@
       <li>
         <RouterLink
           class="link d-inline-flex nav-link link-light p-1 align-items-center"
-          to="/library"
-        >
-          <LibraryIcon />
-          <p class="m-1">Library</p>
-        </RouterLink>
-      </li>
-      <li>
-        <RouterLink
-          class="link d-inline-flex nav-link link-light p-1 align-items-center"
           :to="`/profile/${id}`"
         >
           <ProfileIcon />

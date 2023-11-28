@@ -15,6 +15,7 @@ import Playlist from './views/Playlist.vue';
 import EditUser from './views/EditUser.vue';
 import Library from './views/Library.vue';
 
+
 const routes = [
     {
         path: "/register",
@@ -114,7 +115,8 @@ const routes = [
         meta: {
             requiresAuth: true
         }
-    }
+    },
+
 
 ]
 
