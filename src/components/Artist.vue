@@ -1,10 +1,8 @@
 <template>
     <RouterLink class="nav-link" :to="`/artist/${props.artist._id}`">
-      <div class="album-card">
+      <div class="artist-card">
         <img :src="props.artistImage" alt="Album Cover" />
-        <div id="scroll-container">
-          <div id="scroll-text">{{artist.name}}</div>
-        </div>
+          <div class="name" >{{artist.name}}</div>
       </div>
     </RouterLink>
   </template>
@@ -25,23 +23,30 @@
   </script>
   
   <style scoped>
-  .album-card {
-    width: 13em;
-    height: 13em;
+  .name{
+    white-space: nowrap;      /* Evita que el texto se rompa en varias líneas */
+    overflow: hidden;         /* Oculta el texto que sobrepasa el límite de ancho */
+    text-overflow: ellipsis;  /* Muestra los tres puntos (...) al final del texto */
+    width: 120px;
+  }
+
+  .artist-card {
     margin: 0 auto;
     text-align: center;
-    padding: 1rem;
-    background-color: rgba(20, 20, 20, 0.717);
+    background-color: var(--darker-background-color);
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    gap: 2em;
+    padding: 1em 1.5em;
   }
-  
-  .album-card img {
+
+  .artist-card:hover {
+    background-color: var(--darker-background-color-hover);
+  }
+
+  .artist-card img {
     width: 8em;
     height: 8em;
-    margin-bottom: 1rem;
   }
   
   .name h3 {
@@ -49,51 +54,25 @@
     text-align: start;
   
   }
-  
-  
-  #scroll-container {
-    overflow: hidden;
-    width: 90%;
-  }
-  
-  #scroll-text {
-    text-align: right;
-    white-space: nowrap;
-  
-    /* animation properties */
-    -moz-transform: translateX(-100%);
-    -webkit-transform: translateX(-100%);
-    transform: translateX(-100%);
-    
-    -moz-animation: my-animation 10s linear infinite;
-    -webkit-animation: my-animation 10s linear infinite;
-    animation: my-animation 10s linear infinite;
-  }
-  
-  /* for Firefox */
-  @-moz-keyframes my-animation {
-    from { -moz-transform: translateX(-100%); }
-    to { -moz-transform: translateX(100%); }
-  }
-  
-  /* for Chrome */
-  @-webkit-keyframes my-animation {
-    from { -webkit-transform: translateX(-100%); }
-    to { -webkit-transform: translateX(100%); }
-  }
-  
-  @keyframes my-animation {
-    from {
-      -moz-transform: translateX(-100%);
-      -webkit-transform: translateX(-100%);
-      transform: translateX(-100%);
+
+  @media (max-width: 768px) {
+
+    .artist-card{
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 90%;
     }
-    to {
-      -moz-transform: translateX(100%);
-      -webkit-transform: translateX(100%);
-      transform: translateX(100%);
+
+    .artist-card img {
+      width: 50px;
+      height: 50px;
+    }
+
+    .name {
+      width: 100px;
     }
   }
-  
+
   </style>
   

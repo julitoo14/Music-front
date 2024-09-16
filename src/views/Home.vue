@@ -1,8 +1,7 @@
 <template>
   <div class="homePage">
     <div class="hero">
-      <h1>Welcome {{ nick }} to SoundJam!</h1>
-      <h5>Explore, discover, and share your favorite music!</h5>
+      <h3>Welcome {{ nick }} to <span class="text-pri">SoundJam!</span></h3>
     </div>
     <div style="width: 100%;">
       <input
@@ -10,45 +9,47 @@
       v-model="searchTerm"
       @input="search"
       type="text"
-      placeholder="What should you listen to today?"
+      placeholder="Search for your songs, artists, albums, playlists"
       />
     </div>
 
     <div v-if="searchTerm" class="searchResults">
       <ul ref="list" class="list">
         <li class="item" v-for="song in searchSongsResults" :key="song._id">
-          <RouterLink class="row link" :to="`/album/${song.album}`">
-            <h3 class="col-2">Song</h3>
-            <h1 class="col-8">{{ song.name }}</h1>
-            <h3 class="col-2">{{ song.duration }}</h3>
+          <RouterLink class="link" :to="`/album/${song.album}`">
+            <p class="result-text">Song</p>
+            <p class="result-text">{{ song.name }}</p>
+            <p v-if="!isMobile" class="third-text">{{ song.duration }}</p>
           </RouterLink>
         </li>
 
         <li class="item" v-for="artist in state.artists" :key="artist._id">
-          <RouterLink class="row link" :to="`/artist/${artist._id}`">
-            <h3 class="col-2">Artist</h3>
-            <h1 class="col-8">{{ artist.name }}</h1>
+          <RouterLink class="link" :to="`/artist/${artist._id}`">
+            <p class="result-text">Artist</p>
+            <p class=" result-text">{{ artist.name }}</p>
             <img
+              v-if="!isMobile"
               :src="`${API_BASE_URL}/artist/image/${artist.image}`"
-              class="col-2 artist-image"
+              class=" mini-img "
             />
           </RouterLink>
         </li>
 
         <li class="item" v-for="playlist in playlists" :key="playlist._id">
-          <RouterLink class="row link" :to="`/playlist/${playlist._id}`">
-            <h3 class="col-2">Playlist</h3>
-            <h1 class="col-8">{{ playlist.name }}</h1>
-            <h3 class="col-2">{{ playlist.songs.length }} Songs</h3>
+          <RouterLink class="link" :to="`/playlist/${playlist._id}`">
+            <p class="result-text">Playlist</p>
+            <p class=" result-text">{{ playlist.name }}</p>
+            <p v-if="!isMobile" class="third-text ">{{ playlist.songs.length }} Songs</p>
           </RouterLink>
         </li>
 
         <li class="item" v-for="album in albums" :key="album._id">
-          <RouterLink class="row link" :to="`/album/${album._id}`">
-            <h3 class="col-2">Album</h3>
-            <h1 class="col-8">{{ album.title }}</h1>
+          <RouterLink class="link" :to="`/album/${album._id}`">
+            <p class="result-text">Album</p>
+            <p class="result-text">{{ album.title }}</p>
             <img
-              class="album-cover"
+              v-if="!isMobile"
+              class="mini-img"
               :src="`${API_BASE_URL}/album/image/${album.image}`"
               alt=""
             />
@@ -58,9 +59,8 @@
     </div>
 
     <div class="container-fluid homeScreen" v-else>
-      <h1>Albums</h1>
+      <h2 class="text-pri">Albums</h2>
       <div class="albums">
-
         <Album
         class="album"
         v-for="album in albums"
@@ -69,7 +69,7 @@
         :albumImage="`${API_BASE_URL}/album/image/${album.image}`"
         />
       </div>
-      <h1>Artists</h1>
+      <h2 class="text-pri">Artists</h2>
       <div class="albums">
         <Artist
         v-for="artist in state.artists"
@@ -110,6 +110,16 @@ const searchTerm = ref("");
 const searchArtistsResults = ref([]);
 const searchPlaylistsResults = ref([]);
 const searchSongsResults = ref([]);
+
+const isMobile = ref(window.innerWidth <= 768);
+
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth <= 768;
+};
+
+onMounted(() => {
+  window.addEventListener('resize', updateIsMobile);
+});
 
 const fetchPlaylists = async () => {
   try {
@@ -188,11 +198,15 @@ onMounted(() => {
 <style scoped>
 
 .item {
-  background-color: rgba(2, 2, 2, 0.837);
+  background-color: rgba(44, 42, 44, 0.56);
   width: 100%;
-  height: 130px;
+  height: 85px;
   display: flex;
-  border: rgba(255, 255, 255, 0.241) solid 0.2px;
+  border: rgba(53, 53, 53, 0.37) solid 1px;
+}
+
+.text-pri{
+  color: var(--primary-color);
 }
 
 .item:hover {
@@ -203,20 +217,25 @@ onMounted(() => {
   text-decoration: none;
   color: white;
   display: flex;
+  flex-direction: row;
   align-items: center;
-  text-align: center;
+  justify-content: space-between;
+  margin: auto;
 }
 
-.artist-image {
-  margin: auto;
-  width: 125px;
-  height: 100px;
+.link p{
+  margin: 0;
 }
 
-.album-cover {
-  margin: auto;
-  width: 125px;
-  height: 100px;
+.mini-img {
+  max-width: 80px;
+  object-fit: cover;
+}
+
+.homeScreen{
+  background-color: var(--background-color);
+  margin-bottom: 2em;
+  padding: 1em;
 }
 
 .list {
@@ -225,26 +244,45 @@ onMounted(() => {
 }
 
 .homePage {
-  background: url("/fondo.png") no-repeat center center fixed;
-  background-size: cover;
+  background: var(--darker-background-color);
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   width: 100%;
+  min-height: 100vh;
+  padding-bottom: 100px;
 }
 .searchbar-full {
   width: 100%;
-  background-color: rgba(85, 84, 84, 0.429);
+  background-color: var(--background-color);
   height: 60px;
   text-align: center;
   color: rgb(255, 255, 255);
   margin-bottom: 1em;
   font-size: large;
+  border: none;
 }
+
+.searchbar-full:focus {
+  outline: none;
+  color: var(--primary-color);
+  border: solid 1px var(--primary-color);
+}
+
+.searchbar-full::placeholder {
+  color: var(--muted-text-color);
+}
+
 .searchResults {
   width: 70%;
-  height: 40em;
+  overflow-y: auto;
+}
+
+.hero{
+  background-color: var(--darker-background-color);
+  width: 100%;
+  text-align: center;
 }
 
 .albums{
@@ -253,16 +291,9 @@ onMounted(() => {
     overflow-x: auto;
     width: 100%;
     margin: auto;
+    gap: 0.8em;
   }
 
-  .album{
-    width: 20em;
-    background-color: rgba(0, 0, 0, 0.729);
-  }
-
-  .album:hover{
-    background-color: rgb(46, 45, 45);
-  }
 
   h1{
     color: white;
@@ -271,17 +302,42 @@ onMounted(() => {
     margin-bottom: 0.5em;
   }
 
+.album{
+  background-color: rgba(0, 0, 0, 0.795);
+}
+
+.result-text{
+  white-space: nowrap;      /* Evita que el texto se rompa en varias líneas */
+  overflow: hidden;         /* Oculta el texto que sobrepasa el límite de ancho */
+  text-overflow: ellipsis; /* Muestra los tres puntos (...) al final del texto */
+  max-width: 200px;
+  padding: 0;
+  margin: 0;
+}
+
+.third-text{
+  width: 80px;
+  text-align: center;
+}
+
 
 @media (max-width: 768px) {
 
+  .link{
+    font-size: 0.8em;
+  }
+
+  .result-text{
+    white-space: nowrap;      /* Evita que el texto se rompa en varias líneas */
+    overflow: hidden;         /* Oculta el texto que sobrepasa el límite de ancho */
+    text-overflow: ellipsis; /* Muestra los tres puntos (...) al final del texto */
+    width: 150px;
+  }
 
   .homePage {
-    min-height: max-content;
+    min-height: 100vh;
   }
 
-  .homeScreen{
-    margin-bottom: 8em;
-  }
 
   .hero{
     margin-top: 0.5em;
@@ -305,32 +361,18 @@ onMounted(() => {
 
   .searchResults {
     width: 90%;
-    margin-bottom: 8em;
     overflow-y: auto;
   }
 
   .albums{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     overflow-x: auto;
     width: 95%;
+    gap: 0.2em;
   }
 
-  .album{
-    width: 20em;
-    background-color: rgba(0, 0, 0, 0.795);
-  }
 
-  .title{
-    text-align: center;
-    font-size: 1.4em;
-    padding: 0.3em;
-  }
-
-  .artist-image, .album-cover{
-    width: 30%;
-    margin: auto;
-  }
 
   .item h3{
     font-size: 1em;
@@ -343,7 +385,16 @@ onMounted(() => {
     width: 30%;
     margin: auto;
   }
+  
+  .item-link img{
+    width: 70px;
+    height: 70px;
+  }
 
+  h2{
+    padding: 20px;
+    text-align: center;
+  }
 
 
 }

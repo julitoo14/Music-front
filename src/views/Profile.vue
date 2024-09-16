@@ -1,10 +1,10 @@
 <template>
-  <div class="container-fluid">
+  <div class="view">
     <div class="top p-4">
       <img class="avatar" :src="avatarUrl" alt="" />
       <div class="info">
         <p>Perfil</p>
-        <h1>{{ user.name }}</h1>
+        <h1 class="primary">{{ user.name }}</h1>
         <h3>{{ user.nick }} ~ {{ user.email }}</h3>
       </div>
       <div class="top-buttons">
@@ -14,7 +14,10 @@
     </div>
 
     <div class="container-fluid ">
-      <h1 >Playlists</h1>
+      <h1 class="primary">Playlists</h1>
+      <button class="top-button" @click="showAddPlaylist">
+        New Playlist
+      </button>
       <table v-if=(showTable) class="table table-hover">
         <thead >
           <tr>
@@ -28,17 +31,15 @@
             <td>{{ playlist.name }}</td>
             <td>{{ playlist.songs.length }}</td>
             <td><div class="btn-group">
-              <button class="btn btn-primary"><RouterLink class="nav-link" :to="`/playlist/${playlist._id}`">Visit</RouterLink></button>
-              <button @click="showDeleteModal = true, playlistToDelete = playlist._id" class="btn btn-danger">Remove</button>
+              <button class="button"><RouterLink class="nav-link" :to="`/playlist/${playlist._id}`">Visit</RouterLink></button>
+              <button @click="showDeleteModal = true, playlistToDelete = playlist._id" class="button">Remove</button>
             </div>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-    <button class="top-button" @click="showAddPlaylist">
-      New Playlist
-    </button>
+
     <AddPlaylist
       v-if="showPlaylistModal"
       @close="showPlaylistModal = false"
@@ -137,6 +138,12 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
+.view{
+  background-color: var(--darker-background-color);
+  min-height: 100vh;
+}
+
 div{
   cursor: default;
 }
@@ -144,7 +151,7 @@ div{
 .table td{
   background-color: black;
   color: white;
-  border: black solid 1px;
+  border: #706868 solid 1px;
   
 }
 
@@ -160,6 +167,12 @@ div{
   border: black solid 1px;
 }
 
+.button{
+  background-color: var(--primary-color);
+  border: none;
+  color: white;
+  margin-right: 10px;
+}
 
 .avatar {
   width: 12em;
@@ -167,14 +180,16 @@ div{
   border-radius: 50%;
 }
 
+.primary{
+  color: var(--primary-color);
+}
+
 .top-button{
   height: 4em;
   text-align: center;
-  margin: 0.5em;
-  width: 6em;
-  border-radius: 10px;
-  background-color: rgb(242, 237, 237);
-  color: black;
+  margin: 5px;
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .top-buttons{

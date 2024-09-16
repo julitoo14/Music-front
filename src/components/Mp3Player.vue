@@ -3,7 +3,7 @@
     <div class="songInfo">
       <img v-if="!isMobile" :src="`${API_BASE_URL}/album/image/${cover}`" />
       <div id="scroll-container" class="name-artist-div">
-        <h4 id="scroll-text" class="song-name">{{ getSongInfo() }}</h4>
+        <h4 id="" class="song-name">{{ getSongInfo() }}</h4>
         <h5 v-if="!isMobile">{{ artist }}</h5>
       </div>
     </div>
@@ -212,16 +212,15 @@ onMounted(() => {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 10%;
-  background-color: rgb(12, 12, 12);
+  height: 100px;
+  background-color: var(--background-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0;
   flex-direction: row;
   padding: 0.4em; 
   margin-top: 10%;
-  border-top: #a600ff solid 3px;
+  border-top: var(--primary-color) solid 3px;
 }
 
 .play-pause {

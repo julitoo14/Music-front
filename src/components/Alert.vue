@@ -40,22 +40,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: var(--danger-color);
-    margin-bottom: 20px;
-    padding: 20px;
+    background: var(--error-color);
     border-radius: 10px;
-    height: 100px;
   }
   
   .message{
-    background: none ;
-    font-size: 1.1em;
+    background: none;
+    font-size: 1em;
   }
 
   .close-alert {
-    font-size: 50px;
+    font-size: 20px;
     cursor: pointer;
     background: none;
-    margin-bottom: 10px;
   }
   </style>

@@ -1,53 +1,39 @@
 <template>
   <nav class="navbar">
-      <ul v-if="logged" class="navbar-nav">
+      <Div class="logo-div">
+        <img src="/logo.png" alt="logo" class="logo">
+      </Div>
+      <ul class="navbar-nav">
         <li>
           <RouterLink
-            class="link d-inline-flex nav-link link-light p-1 align-items-center"
+            class="link"
             to="/"
           >
             <HomeIcon />
-            <p class="m-1"></p>
+            <span class="navbar-text">Home</span>
           </RouterLink>
         </li>
+
+        <li v-if="admin">
+          <RouterLink
+              class="link"
+              to="/createArtist"
+          >
+            <Add />
+            <span class="navbar-text">Create Artist</span>
+          </RouterLink>
+        </li>
+
         <li>
           <RouterLink
-            class="link d-inline-flex nav-link link-light p-1 align-items-center"
+            class="link"
             :to="`/profile/${id}`"
           >
             <ProfileIcon />
-            <p class="m-1"></p>
+            <span class="navbar-text">Profile</span>
           </RouterLink>
         </li>
-        <li v-if="admin">
-          <RouterLink
-            class="link d-inline-flex nav-link link-light p-1 align-items-center"
-            to="/createArtist"
-          >
-            <Add />
-            <p class="m-1"></p>
-          </RouterLink>
-        </li>
-      </ul>
 
-      <ul v-else class="navbar-nav">
-        <li>
-          <RouterLink
-            class="link d-inline-flex nav-link link-light p-1 align-items-center"
-            to="/login"
-          >
-            <LoginIcon />
-            <p class="m-1">Sign In</p>
-          </RouterLink>
-        </li>
-        <li>
-          <RouterLink
-            class="link d-inline-flex nav-link link-light p-1 align-items-center"
-            to="/register"
-          >
-            <p class="m-1">Sign Up</p>
-          </RouterLink>
-        </li>
       </ul>
   </nav>
 </template>
@@ -61,6 +47,7 @@ import LoginIcon from "../assets/icons/LoginIcon.vue";
 import Add from "../assets/icons/Add.vue";
 import Search from "../assets/icons/Search.vue";
 import LibraryIcon from "../assets/icons/LibraryIcon.vue";
+import Settings from "../assets/icons/Settings.vue";
 
 const admin = ref(false);
 const logged = ref("");
@@ -98,17 +85,24 @@ h2{
 }
 
 .navbar {
+  position: relative;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
-  background-color: rgb(26, 27, 27);
+  background-color: var(--background-color);
   position: fixed;
   bottom: 0;
-  left: 0;
   z-index: 10000;
   height: 40px;
+}
+
+.navbar-text{
+  text-decoration: none;
+  color: white;
+  font-size: 1em;
+  display: none;
 }
 
 .navbar-nav {
@@ -125,4 +119,56 @@ svg{
     width: 1.7em;
     height: 1.7em;
 }
+
+.logo{
+  display: none;
+}
+
+
+
+@media screen and (min-width: 768px) {
+  .logo{
+    display: block;
+    width: 50px;
+    height: 50px;
+  }
+
+  .logo-div{
+    width: 20%;
+    position: absolute;
+    left: 20px;
+
+  }
+
+  .navbar {
+    top: 0;
+    height: 80px;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .navbar-nav {
+    justify-content: space-between;
+    width: 20%;
+    margin: auto;
+    gap: 1em;
+  }
+
+  .navbar-text{
+    display: block;
+  }
+
+  .link{
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+
+
+}
+
+
 </style>

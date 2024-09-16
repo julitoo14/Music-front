@@ -1,29 +1,27 @@
 <template>
-  <div class="container-fluid page">
+  <div class=" page">
     
     <div class="artist-container" >
-      <div class="artist-info " >
-        <div class="name-img ">
+        <div class="artist-info">
           <img class="artist-image " :src="image">
-          <h1 class="">{{ artist.name }}</h1>
-        </div>
-        <div>
-          <p class="description">{{ artist.description }}</p>
+          <div>
+            <h1 class="name">{{ artist.name }}</h1>
+            <p class="description">{{ artist.description }}</p>
           
           <div v-if="admin">
-            <button class="btn-success btn">
-              <RouterLink class="nav-link" :to="`/createAlbum/${artist._id}`"
-              >Create Album</RouterLink
-              >
-            </button>
-            <button class="btn-primary btn">
-              <RouterLink class="nav-link" :to="`/editArtist/${artist._id}`"
-              >Edit Artist</RouterLink
-              >
-            </button>
-            <button class="btn-danger btn" @click="showDeleteModal = true">
-              Remove Artist
-            </button>
+              <button class="btn-success btn">
+                <RouterLink class="nav-link" :to="`/createAlbum/${artist._id}`"
+                >Create Album</RouterLink
+                >
+              </button>
+              <button class="btn-primary btn">
+                <RouterLink class="nav-link" :to="`/editArtist/${artist._id}`"
+                >Edit Artist</RouterLink
+                >
+              </button>
+              <button class="btn-danger btn" @click="showDeleteModal = true">
+                Remove Artist
+              </button>
           </div>
         </div>
       </div>
@@ -33,7 +31,7 @@
         v-for="album in albums"
         :key="album._id"
         :album="album"
-        :albumImage="`https://juliangarciasuarez.tech/api/album/image/${album.image}`"
+        :albumImage="`${API_BASE_URL}/album/image/${album.image}`"
         />
       </div>
     </div>
@@ -110,30 +108,31 @@ onMounted(() => {
 
 <style scoped>
 
+.mobile-name{
+  display: none;
+}
+
 .page{
-  height: min-content;
+  min-height: 100vh;
+  background-color: var(--darker-background-color);
+  padding-top: 7em;
+  overflow-y: auto;
+  padding-bottom: 7em;
 }
 
 .artist-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-}
-
-.artist-info {
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 20px;
+  background-color: var(--background-color);
+  width: 60%;
   border-radius: 10px;
   text-align:justify;
   color: white;
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  padding: 20px;
+  margin: auto;
+  gap: 2em;
 }
 
 .artist-image {
@@ -143,6 +142,11 @@ onMounted(() => {
   border-radius: 10px;
   margin-right: 20px;
   margin: auto;
+}
+
+.artist-info{
+  display: flex;
+  gap: 20px;
 }
 
 .name-img{
@@ -182,27 +186,33 @@ h2 {
 .description {
   font-size: 1.3rem;
   margin-bottom: 20px;
-  height: 9em;
-  overflow-x: auto;
 }
 
 
 
 @media (max-width: 768px) {
 
+
+  .artist-info{
+    flex-direction: column;
+    align-items: center;
+  }
+
   .description{
     font-size: 1rem;
-    height: 10em;
     overflow: scroll;
+    max-height: 8em;
   }
+
+  .page{
+    padding-top: 0;
+    background-color: var(--background-color);
+  }
+
   .artist-container {
     padding: 10px;
     margin-bottom: 5em;
-  }
-
-  .artist-info {
-    flex-direction: column;
-    text-align: center;
+    width: 100%;
   }
 
   .name-img {

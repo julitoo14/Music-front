@@ -1,7 +1,8 @@
 <template>
-  <div class="container">
-    <h1 class="mt-5 text-center">Edit Artist</h1>
+  <div class="view">
     <form class="mt-5" @submit.prevent="submitForm">
+      <h1 class="mt-5 text-center">Edit Artist</h1>
+
       <div class="form-group" v-for="field in fields" :key="field.id">
         <label :for="field.id">{{ field.label }}</label>
         <input
@@ -23,11 +24,11 @@
         <button
           @click="update(name, description)"
           type="submit"
-          class="m-3 btn btn-primary"
+          class="m-3 button "
         >
           Save
         </button>
-        <button class="m-3 btn btn-primary">
+        <button class=" button m-3 ">
           <RouterLink class="nav-link" :to="`/artist/${route.params.id}`"
             >Back</RouterLink
           >
@@ -43,6 +44,54 @@
     />
   </div>
 </template>
+
+<style scoped>
+.form-group {
+  margin-bottom: 1.5rem;
+}
+form{
+  margin-bottom: 3em;
+}
+
+.view{
+  min-height: 100vh;
+  background-color: var(--darker-background-color);
+  margin-top: 2em;
+}
+
+.form-control {
+  background-color: var(--darker-background-color);
+  color: var(--primary-color);
+}
+
+.form-control::placeholder {
+  color: var(--muted-text-color);
+}
+
+.form-control:focus {
+  border: solid 1px var(--primary-color);
+}
+
+form{
+  background-color: var(--background-color);
+  padding: 40px;
+
+}
+
+h1{
+  color: var(--primary-color);
+}
+
+.custom-file-input {
+  color: var(--primary-color);
+}
+
+.button{
+  background-color: var(--primary-color);
+  border: none;
+  padding: 0.5em 1em;
+}
+</style>
 
 <script setup>
 import { ref, onMounted, reactive } from "vue";

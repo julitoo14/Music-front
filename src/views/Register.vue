@@ -1,79 +1,65 @@
 <template>
   <div class="page">
-    <form v-on:submit.prevent="onSubmit" class="mt-5">
-      <h1 class="text-center">Create your account!</h1>
-      <div class="mb-3">
-        <label for="name" class="form-label">Name</label>
+    <form autocomplete="off" v-on:submit.prevent="onSubmit">
+      <img src="/logo.png" alt="logo" class="logo" />
+      <div class="register-text">
+        <h2 class="text-center">Create your account!</h2>
+        <span class="text-center">Or <RouterLink to="/login" class="link">login to your account </RouterLink></span>
+      </div>
         <input
           v-model="form.name"
           required
           type="name"
-          class="form-control bg-dark text-light"
-          style="--bs-bg-opacity: .4; border: solid 2px white"
+          class="form-control"
           id="name"
+          placeholder="Name"
+          autocomplete="off"
         />
-        <div id="nameHelp" class="form-text"></div>
-      </div>
-      <div class="mb-3">
-        <label for="surname" class="form-label">Surname</label>
         <input
           v-model="form.surname"
           required
           type="surname"
-          class="form-control bg-dark text-light"
-          style="--bs-bg-opacity: .4; border: solid 2px white"
+          class="form-control"
           id="surname"
+          placeholder="Surname"
         />
-      </div>
-      <div class="mb-3">
-        <label for="nick" class="form-label">Nickname</label>
         <input
           v-model="form.nick"
           required
           type="text"
           name="nick"
           id="nick"
-          class="form-control bg-dark text-light"
-          style="--bs-bg-opacity: .4; border: solid 2px white"
+          class="form-control"
+          placeholder="Nick"
         />
-      </div>
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
         <input
           v-model="form.email"
           required
           type="email"
           name="email"
           id="email"
-          class="form-control bg-dark text-light"
-          style="--bs-bg-opacity: .4; border: solid 2px white"
+          class="form-control"
+          placeholder="Email address"
         />
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
         <input
           v-model="form.password"
           required
           type="password"
-          class="form-control bg-dark text-light"
-          style="--bs-bg-opacity: .4; border: solid 2px white"
+          class="form-control"
           id="password"
+          placeholder="Password"
         />
-      </div>
-      <div class="mb-3">
-        <label for="confirmPassword" class="form-label">Confirm Password</label>
         <input
           v-model="form.confirmPassword"
           required
           type="password"
-          class="form-control bg-dark text-light"
-          style="--bs-bg-opacity: .4; border: solid 2px white"
+          class="form-control"
           id="confirmPassword"
+          placeholder="Confirm Password"
         />
-      </div>
       <button
         @click="register()"
-        class="mt-3 mb-5 btn btn-lg btn-light w-50 m-auto d-block"
+        class="register-btn"
       >
         Register
       </button>
@@ -141,7 +127,7 @@ const register = async () => {
       router.push("/login");
     }, 5000);
   } catch (err) {
-    showAlert(err.message, "danger");
+    showAlert(err, "danger");
   }
 };
 
@@ -155,31 +141,71 @@ onMounted(() => {
 
 <style scoped>
 form {
-  width: 50%;
-  margin: auto;
+  width: 40%;
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
 }
 
-.form-text {
-  color: white;
+.form-control {
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
+
+.form-control::placeholder{
+  color: var(--muted-text-color);
+}
+
+.form-control:focus{
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.register-text{
+  display: flex;
+  flex-direction: column;
+}
+
 .page{
-    background: url('/fondo.png') no-repeat center center fixed;
-    background-size: cover;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
+  min-height: 100vh;
+  background: var(--background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@media (max-width: 768px) {
+.link{
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.logo{
+  width: 100px;
+  margin: auto;
+  display: block;
+}
+
+.register-btn{
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  padding: 0.5em;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+
+@media screen and (max-width: 1000px) {
   form {
-    width: 90%;
+    width: 70%;
+    margin: auto;
   }
 
   .page{
-    padding-bottom: 4em;
+    padding-top:5em;
   }
-
 }
+
+
 </style>

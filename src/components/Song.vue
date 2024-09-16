@@ -1,60 +1,107 @@
 <template>
   <tbody>
-    <tr class="song" @click="$emit('playSong')">
-      <th v-if="props.track">{{ song.track }}</th>
-      <td style="font-size: 1.5em; text-align:left">{{ song.name }}</td>
-      <td v-if="!isMobile" style="font-size: 1.1em; text-align:left">{{ song.duration }}</td>
-      <td>
-        <div class="btn-group" v-if="playlistview ">
-          <button v-if="isMobile" class="btn btn-success" @click="$emit('playSong')">play</button>
-          <button class="btn btn-danger" @click="$emit('removeSong')">Delete</button>
-        </div>
-        <div v-else-if="admin" class="btn-group">
-          <button v-if="!isMobile" class="btn btn-success" @click="$emit('playSong')">play</button>
-        <AddIcon  @click.stop="$emit('addSong',selectSong())" /> 
-          <RouterLink class="nav-link" :to="`/editSong/${song._id}`"
-            > <Pencil></Pencil> </RouterLink
-          >
-        
-        <Delete  @click="$emit('removeSong')">
-          Delete
-        </Delete>
+  <tr class="song" @click="$emit('playSong')">
+    <th v-if="props.track">{{ song.track }}</th>
+    <td style="font-size: 1.5em; text-align:left">{{ song.name }}</td>
+    <td v-if="!isMobile" style="font-size: 1.1em; text-align:left">{{ song.duration }}</td>
+    <td>
+      <!-- Dropdown de los tres puntos -->
+      <div class="dropdown">
+        <button
+            class="btn btn-secondary dropdown-toggle"
+            type="button"
+            id="dropdownMenuButton"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            @click.stop
+        >
+          •••
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <!-- Opciones según el tipo de vista -->
+          <li v-if="playlistview">
+            <button class="dropdown-item" @click="$emit('removeSong')">Delete</button>
+          </li>
+          <li v-else-if="admin">
+            <button
+                class="dropdown-item"
+                @click.stop="$emit('addSong', selectSong())"
+            >
+              Add Song
+            </button>
+            <RouterLink class="dropdown-item" :to="`/editSong/${song._id}`">
+              Edit Song
+            </RouterLink>
+            <button class="dropdown-item" @click="$emit('removeSong')">
+              Delete
+            </button>
+          </li>
+          <li v-else>
+            <button
+                class="dropdown-item"
+                @click.stop="$emit('addSong', selectSong())"
+            >
+              Add Song
+            </button>
+          </li>
+        </ul>
       </div>
-      <div v-else class="btn-group">
-        <AddIcon @click.stop="$emit('addSong', selectSong())">+</AddIcon>
-      </div>
-      </td>
-    </tr>
+    </td>
+  </tr>
   </tbody>
-  
 </template>
+
 <style scoped>
-  
-.song{
+.song {
+  cursor: pointer;
+  border: rgba(30, 29, 29, 0.22) 1px solid;
+}
+
+td {
+  background-color: var(--darker-background-color);
+  color: white;
+  text-align: center;
+  border: none;
+}
+
+th {
+  background-color: var(--darker-background-color);
+  color: white;
+  text-align: center;
+  font-size: 1.6em;
+  border: none;
+}
+
+tr:hover td,
+tr:hover th {
+  background-color: var(--darker-background-color-hover);
+}
+
+td,
+th {
+  padding: 10px;
+}
+
+.dropdown-toggle {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5em;
   cursor: pointer;
 }
 
-  td{
-    background-color: black;
-    color: white;
-    text-align: center;
-    border: none;
-  }
+.dropdown-menu {
+  background-color: var(--background-color);
+  color: white;
+}
 
-  th{
-    background-color: rgb(0, 0, 0);
-    color: white;
-    text-align: center;
-    font-size: 1.6em;
-    border: none;
-  }
-
-  tr:hover td, tr:hover th {
-    background-color: rgb(42, 41, 41);
-  }
-
-
+.dropdown-item {
+  color: white;
+  background-color: var(--background-color);
+  border: none;
+}
 </style>
+
 
 
 <script setup>

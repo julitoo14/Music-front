@@ -1,37 +1,42 @@
 <template>
   <div class="page">
-    <form v-on:submit.prevent="onSubmit" class="mt-5">
-      <h1 class="text-center">Log Into Your Account</h1>
+    <form v-on:submit.prevent="onSubmit">
+      <img src="/logo.png" alt="logo" class="logo" />
+      <div class="login-text">
+        <h2 class="text-center">Sign in to your account!</h2>
+        <span class="text-center">Or <RouterLink to="/register" class="link">register for a new account </RouterLink></span>
+      </div>
 
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
         <input
           v-model="email"
-          required
           type="email"
           name="email"
           id="email"
-          class="form-control bg-dark text-light"
-          style="--bs-bg-opacity: .4; border: solid 2px white"
+          class="form-control"
+          placeholder="Email address"
         />
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
         <input
           v-model="password"
-          required
           type="password"
-          class="form-control bg-dark text-light "
-          style="--bs-bg-opacity: .4; border: solid 2px white"
+          placeholder="Password"
+          class="form-control "
           id="password"
         />
+
+      <div class="remember-forgot">
+        <div>
+          <input type="checkbox" value="remember-me" id="remember-me" class="remember-input">
+          <label class="remember-text" for="remember-me">Remember me</label>
+        </div>
+        <RouterLink to="/forgot-password" class="link">Forgot your password?</RouterLink>
       </div>
+
 
       <button
         @click="login()"
-        class="mt-3 mb-5 btn btn-lg btn-light w-50 m-auto d-block"
+        class="sign-btn"
       >
-        Login
+        Sign in
       </button>
       <Alert
         :type="alert.type"
@@ -96,33 +101,93 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
 form {
   width: 40%;
-  margin: auto;
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
 }
 
 .form-control{
-  background-color: rgba(0, 0, 0, 0.469)2, 51, 51;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.form-control::placeholder{
+  color: var(--muted-text-color);
+}
+
+.form-control:focus{
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.login-text{
+  display: flex;
+  flex-direction: column;
 }
 
 .page{
-    background: url('/fondo.png') no-repeat center center fixed;
-    background-size: cover;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
+  height: 100vh;
+  background: var(--background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.link{
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.logo{
+  width: 100px;
+  margin: auto;
+  display: block;
+}
+
+.remember-forgot{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remember-text{
+  margin-left: 0.5em;
+  color: var(--muted-text-color);
+}
+
+.remember-input {
+  background-color: var(--background-color);
+}
+
+.sign-btn{
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  padding: 0.5em;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
 
 @media screen and (max-width: 1000px) {
   form {
     width: 70%;
-    margin: auto;
   }
 
   .page{
-    padding-top:5em;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .remember-forgot{
+    flex-direction: column;
+    gap: 1em;
+    justify-content: flex-start;
+    align-items: flex-start;
   }
 }
 

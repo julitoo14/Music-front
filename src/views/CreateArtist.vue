@@ -1,16 +1,17 @@
 <template>
-  <div class="container">
+  <div class="view">
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <h1 class="text-center mb-4">Create Artist</h1>
         <form>
+          <h1 class="text-center mb-4">Create Artist</h1>
+
           <div class="form-group" v-for="field in fields" :key="field.id">
-            <label :for="field.id">{{ field.label }}</label>
             <input
               :type="field.type"
               class="form-control"
               :id="field.id"
               v-model="field.model.value"
+              :placeholder="field.label"
               :required="field.required"
             />
           </div>
@@ -26,10 +27,10 @@
           </div>
           <button
             type="button"
-            class="btn btn-primary btn-block mt-4"
+            class="add-button mt-4"
             @click="addArtist"
           >
-            Save
+            Save Artist
           </button>
         </form>
         <Alert
@@ -55,8 +56,8 @@ const description = ref("");
 const image = ref("default.png");
 const router = useRouter();
 const fields = [
-  { id: "name", label: "Name:", model: name, type: "text", required: true },
-  { id: "description", label: "Description:", model: description, type: "textarea", required: true },
+  { id: "name", label: "Name", model: name, type: "text", required: true },
+  { id: "description", label: "Description", model: description, type: "textarea", required: true },
 ]
 let alert = reactive({
   show: false,
@@ -115,6 +116,45 @@ onMounted( () => {
   margin-bottom: 1.5rem;
 }
 form{
-    margin-bottom: 3em;
 }
+
+.view{
+  min-height: 100vh;
+  background-color: var(--darker-background-color);
+  margin-top: 2em;
+}
+
+.form-control {
+  background-color: var(--darker-background-color);
+  color: var(--primary-color);
+}
+
+.form-control::placeholder {
+  color: var(--muted-text-color);
+}
+
+.form-control:focus {
+  border: solid 1px var(--primary-color);
+}
+
+form{
+  background-color: var(--background-color);
+  padding: 40px;
+
+}
+
+h1{
+  color: var(--primary-color);
+}
+
+.custom-file-input {
+  color: var(--primary-color);
+}
+
+.add-button{
+  background-color: var(--primary-color);
+  border: none;
+  padding: 0.5em 1em;
+}
+
 </style>

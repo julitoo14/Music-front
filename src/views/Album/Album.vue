@@ -2,9 +2,7 @@
   <div class="albumView">
     <div class="container-fluid">
       <div class="info p-3">
-        <div class="album-cover">
-          <img :src="albumImage" alt="Album Cover" class="img-fluid rounded" />
-        </div>
+        <img :src="albumImage" alt="Album Cover" class="album-cover" />
         <div class="album-info">
           <h1>{{ album.title }}</h1>
           <h2>{{ artist.name }}</h2>
@@ -43,6 +41,7 @@
         :song="song"
         :track="true"
         :isMobile="isMobile"
+        class="song-row"
       />
     </table>
 
@@ -163,15 +162,21 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.albumView{
+  background-color: var(--darker-background-color);
+  padding-bottom: 6em;
+}
+
 .text-left {
   text-align: left;
 }
 
 th {
-  background-color: rgb(32, 31, 31);
+  background-color: var(--background-color);
   color: white;
   text-align: center;
   font-size: 1.2em;
+  border: none;
 }
 .info {
   color: white;
@@ -181,12 +186,16 @@ th {
   gap: 2em;
 }
 .album-cover {
-  width: 400px;
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
 }
 
 .albumView {
   height: 100vh;
+  overflow-y: scroll;
 }
+
 .button {
   background-color: transparent;
   border: none;
@@ -206,8 +215,13 @@ th {
 
 .table {
   overflow-y: scroll;
-  margin-bottom: 6em;
 }
+
+.song-row {
+  background-color: rgba(0, 0, 0, 0.795);
+}
+
+
 
 @media (max-width: 768px) {
   .albumView {
@@ -226,9 +240,7 @@ th {
 
   .table{
     width: 100%;
-    margin: auto;
-    margin-top: 0.3em;
-    margin-bottom: 5em;
+    margin-bottom: 7em;
   }
 }
 </style>

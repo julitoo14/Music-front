@@ -1,42 +1,26 @@
 <template>
-  <div class="view" :style="{ flexDirection: logged ? 'block' : 'flex' }">
-    <Navbar class="bar" v-if="isMobile"></Navbar>
-    <Sidebar class="bar" v-else></Sidebar>
-    <RouterView
-      class="main-view"
+    <Navbar class="bar" v-if="logged"></Navbar>
+    <RouterView class="router-view"
       @playSong="playSong"
-      style="overflow-y: auto; width: 100%"
     ></RouterView>
     <Mp3Player
-    class="mp3"
+      v-if="logged"
+      class="mp3"
       :song="songInfo"
       :files="file"
       @previous="playPreviousSong"
       @next="playNextSong"
       @ended="playNextSong"
     ></Mp3Player>
-  </div>
 </template>
 
 <style scoped>
-.main-view {
-  height: 90vh;
+@media screen and (min-width: 768px) {
+  .router-view{
+    padding-top: 80px;
+    background-color: var(--darker-background-color);
+  }
 }
-
-
-.view {
-  background: linear-gradient(
-    180deg,
-    rgba(12, 12, 12, 1) 0%,
-    rgba(37, 37, 38, 1) 53%,
-    rgba(54, 55, 55, 1) 86%
-  );
-  width: 100%;
-  min-height: max-content;
-  display: flex;
-}
-
-
 
 </style>
 
@@ -44,7 +28,6 @@
 import { RouterView } from "vue-router";
 import { isPlaying } from "./composables/useAudioPlayer.js";
 import Navbar from "./components/Navbar.vue";
-import Sidebar from "./components/Sidebar.vue";
 import Mp3Player from "./components/Mp3Player.vue";
 import { ref, onMounted} from "vue";
 const logged = ref(false);

@@ -177,7 +177,7 @@ export async function uploadArtistImage(image, id) {
 }
 
 export async function updateArtist(id, name, description) {
-    const response = await axios.put(`${API_BASE_URL}/api/artist/update/${id}`, {name , description } , config);
+    const response = await axios.put(`${API_BASE_URL}/artist/update/${id}`, {name , description } , config);
     return response.data;
 }
 

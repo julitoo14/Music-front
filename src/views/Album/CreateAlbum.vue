@@ -1,11 +1,8 @@
 <template>
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <h1 class="text-center mb-4">Create Album</h1>
+    <div class="view">
           <form>
+            <h1 class="text-center">Create Album</h1>
             <div class="form-group" v-for="field in fields" :key="field.id">
-              <label :for="field.id">{{ field.label }}</label>
               <input
                 class="form-control"
                 v-model="field.model.value"
@@ -25,7 +22,7 @@
             </div>
             <button
               type="button"
-              class="btn btn-primary btn-block mt-4"
+              class="add-button mt-4"
               @click="addAlbum"
             >
               Save
@@ -37,9 +34,8 @@
             :show="alert.show"
             @close="alert.show = false"
           />
-        </div>
-      </div>
     </div>
+
   </template>
   
   <script setup>
@@ -55,9 +51,9 @@
   const router = useRouter();
   const route = useRoute();
   const fields = [
-      { id: 'title', label: 'Title', model: title, placeholder: 'Enter title' },
-      { id: 'description', label: 'Description', model: description, placeholder: 'Enter description' },
-      { id: 'year', label: 'Year', model: year, placeholder: 'Enter year' },
+      { id: 'title', label: 'Title', model: title, placeholder: 'Title:' },
+      { id: 'description', label: 'Description', model: description, placeholder: 'Description:' },
+      { id: 'year', label: 'Year', model: year, placeholder: 'Year:' },
     ];
   let alert = reactive({
     show: false,
@@ -116,13 +112,51 @@
   </script>
   
   <style scoped>
+  h1{
+    color: var(--primary-color);
+  }
+
+  form{
+    background-color: var(--background-color);
+    padding: 2em;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  }
+
+  .form-control {
+    background-color: var(--darker-background-color);
+    color: var(--primary-color);
+  }
+
   .form-group {
     margin-bottom: 1rem;
   }
 
+  .form-control:focus {
+    border: solid 1px var(--primary-color);
+  }
+
+  .custom-file-input {
+    color: var(--primary-color);
+  }
+
+  .add-button{
+    background-color: var(--primary-color);
+    border: none;
+    padding: 0.5em 1em;
+  }
+
+
+  .view{
+    padding-top: 7em;
+    width: 100%;
+    background-color: var(--darker-background-color);
+    min-height: 100vh;
+  }
+
   @media (max-width: 768px) {
-    .container{
-      margin-top: 4em;
+    .view{
+      padding-top:2em;
     }
   }
   </style>
