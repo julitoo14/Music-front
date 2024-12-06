@@ -102,7 +102,7 @@ const login = async () => {
 
 const loginAsGuest = async () => {
   try{
-    const res = await loginUser('test@gmail.com', '1234');
+    const res = await loginUser('guest@gmail.com', '123456');
     showAlert(res.message, "info");
     user.value = res.user;
     token.value = res.token;
