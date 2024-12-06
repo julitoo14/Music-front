@@ -385,7 +385,7 @@ onMounted(() => {
     width: 30%;
     margin: auto;
   }
-  
+
   .item-link img{
     width: 70px;
     height: 70px;

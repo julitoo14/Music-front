@@ -38,6 +38,13 @@
       >
         Sign in
       </button>
+    <button
+      @click="loginAsGuest()"
+      class="sign-btn"
+    >
+      Sign in as Guest
+    </button>
+
       <Alert
         :type="alert.type"
         :message="alert.message"
@@ -91,6 +98,19 @@ const login = async () => {
   }catch(err){
     showAlert(err.response.data.message);
   }  
+};
+
+const loginAsGuest = async () => {
+  try{
+    const res = await loginUser('test@gmail.com', '1234');
+    showAlert(res.message, "info");
+    user.value = res.user;
+    token.value = res.token;
+    setLocalStorage();
+    router.go('/');
+  }catch(err){
+    showAlert(err.response.data.message);
+  }
 };
 
 onMounted(() => {
